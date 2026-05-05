@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MomentPik — Having an Existential Crisis BRB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cr: #FDFAF7;
+  --ink: #1A1A1A;
+  --ink2: #3A3A3A;
+  --mist: rgba(26,26,26,0.42);
+  --mist2: rgba(26,26,26,0.24);
+  --or: #FD721E;
+  --rd: #FF1803;
+  --amber: #FF9A1F;
+  --card: rgba(255,255,255,0.72);
+  --border: rgba(253,114,30,0.16);
+  --border2: rgba(26,26,26,0.07);
+  --glow-or: rgba(253,114,30,0.28);
+  --glow-rd: rgba(255,24,3,0.18);
+  --s1: 0 2px 20px rgba(26,26,26,0.06), 0 8px 40px rgba(26,26,26,0.04);
+  --s2: 0 4px 40px rgba(253,114,30,0.18), 0 2px 10px rgba(26,26,26,0.06);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  background: var(--cr);
+  color: var(--ink);
+  overflow-x: hidden;
+  min-height: 100vh;
+  cursor: none;
+}
+
+/* ── Custom cursor ── */
+#cursor {
+  position: fixed;
+  width: 12px; height: 12px;
+  background: var(--or);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: multiply;
+}
+#cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--or);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.12s ease, width 0.25s, height 0.25s, border-color 0.2s;
+  opacity: 0.6;
+}
+body:hover #cursor { opacity: 1; }
+
+/* ── Noise overlay ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; opacity: 0.7;
+}
+
+/* ── Gradient mesh bg ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 900px 600px at 5% 10%, rgba(253,114,30,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 600px 500px at 95% 90%, rgba(255,24,3,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 500px 400px at 80% 20%, rgba(255,154,31,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 400px 300px at 20% 80%, rgba(253,114,30,0.04) 0%, transparent 60%);
+}
+
+/* ── Floating shutter blades ── */
+.blade-field {
+  position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden;
+}
+.blade {
+  position: absolute;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(253,114,30,0.15), transparent);
+  border-radius: 99px;
+  animation: blade-fall linear infinite;
+  transform-origin: top center;
+}
+
+@keyframes blade-fall {
+  0% { transform: translateY(-120px) rotate(var(--rot)); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(110vh) rotate(var(--rot)); opacity: 0; }
+}
+
+/* ── Film grain strips ── */
+.grain-strip {
+  position: fixed;
+  top: 0; bottom: 0;
+  width: 3px;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0px,
+    transparent 6px,
+    rgba(253,114,30,0.06) 6px,
+    rgba(253,114,30,0.06) 7px
+  );
+  pointer-events: none; z-index: 1;
+  animation: grain-flicker 0.15s steps(1) infinite;
+}
+.grain-strip.l { left: 5%; }
+.grain-strip.r { right: 5%; }
+@keyframes grain-flicker {
+  0%,100% { opacity: 0.5; }
+  33% { opacity: 0.8; }
+  66% { opacity: 0.3; }
+}
+
+/* ── Polaroid cluster (floaters) ── */
+.pol-field {
+  position: fixed; inset: 0; pointer-events: none; z-index: 2; overflow: hidden;
+}
+.pol {
+  position: absolute;
+  width: 110px;
+  background: #fff;
+  padding: 7px 7px 28px;
+  box-shadow: 0 8px 32px rgba(26,26,26,0.10), 0 1px 4px rgba(26,26,26,0.05);
+  border-radius: 1px;
+  transition: box-shadow 0.3s, filter 0.3s;
+  pointer-events: auto;
+  cursor: none;
+}
+.pol:hover {
+  box-shadow: 0 20px 56px rgba(253,114,30,0.20), 0 4px 12px rgba(26,26,26,0.10);
+  filter: brightness(1.02);
+  z-index: 10;
+}
+.pol-img {
+  width: 100%; aspect-ratio: 1;
+  background: #f5f0ec;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; border-radius: 1px;
+  position: relative;
+}
+.pol-img::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 50%, rgba(253,114,30,0.06) 100%);
+}
+.pol-caption {
+  margin-top: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.42rem;
+  color: rgba(26,26,26,0.32);
+  text-align: center; letter-spacing: 0.03em;
+  line-height: 1.4;
+}
+
+/* Polaroid positions & animations */
+.pol:nth-child(1) { top: 5%; left: 2%; animation: pol-drift-a 14s ease-in-out infinite; }
+.pol:nth-child(2) { top: 8%; right: 3%; animation: pol-drift-b 17s ease-in-out infinite; }
+.pol:nth-child(3) { bottom: 22%; left: 1.5%; animation: pol-drift-c 16s ease-in-out infinite; }
+.pol:nth-child(4) { bottom: 18%; right: 2%; animation: pol-drift-a 19s ease-in-out infinite reverse; }
+.pol:nth-child(5) { top: 42%; left: 0%; animation: pol-drift-b 21s ease-in-out infinite 2s; }
+.pol:nth-child(6) { top: 38%; right: 0.5%; animation: pol-drift-c 15s ease-in-out infinite 1s; }
+
+@keyframes pol-drift-a {
+  0%,100% { transform: rotate(-12deg) translate(0, 0); }
+  30% { transform: rotate(-9deg) translate(6px, -14px); }
+  65% { transform: rotate(-14deg) translate(-4px, 8px); }
+}
+@keyframes pol-drift-b {
+  0%,100% { transform: rotate(10deg) translate(0, 0); }
+  40% { transform: rotate(13deg) translate(-8px, -12px); }
+  70% { transform: rotate(7deg) translate(5px, 10px); }
+}
+@keyframes pol-drift-c {
+  0%,100% { transform: rotate(7deg) translate(0, 0); }
+  35% { transform: rotate(4deg) translate(10px, -8px); }
+  65% { transform: rotate(10deg) translate(-6px, 12px); }
+}
+
+/* ── Main layout ── */
+.stage {
+  position: relative; z-index: 3;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 3rem 1.5rem 6rem;
+  gap: 0;
+}
+
+/* ── Logo section ── */
+.logo-section {
+  display: flex; flex-direction: column; align-items: center;
+  margin-bottom: 2.2rem;
+  animation: reveal-up 0.9s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.logo-orbit {
+  position: relative;
+  width: 110px; height: 110px;
+  margin-bottom: 1.2rem;
+}
+.orbit-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+}
+.orbit-ring.outer {
+  border: 1px dashed rgba(253,114,30,0.30);
+  animation: spin-cw 22s linear infinite;
+  inset: -18px;
+}
+.orbit-ring.outer::before {
+  content: '';
+  position: absolute;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--or);
+  top: -4px; left: 50%; transform: translateX(-50%);
+  box-shadow: 0 0 12px 3px rgba(253,114,30,0.55);
+  animation: orbit-pulse 2s ease-in-out infinite;
+}
+@keyframes orbit-pulse {
+  0%,100% { box-shadow: 0 0 8px 2px rgba(253,114,30,0.45); }
+  50% { box-shadow: 0 0 18px 5px rgba(253,114,30,0.75); }
+}
+.orbit-ring.inner {
+  border: 1px solid rgba(253,114,30,0.12);
+  animation: spin-ccw 16s linear infinite;
+  inset: -8px;
+}
+@keyframes spin-cw { to { transform: rotate(360deg); } }
+@keyframes spin-ccw { to { transform: rotate(-360deg); } }
+
+.logo-btn {
+  width: 110px; height: 110px; border-radius: 50%;
+  background: var(--card);
+  backdrop-filter: blur(20px);
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--s1), 0 0 40px rgba(253,114,30,0.14);
+  cursor: none;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+  animation: logo-pulse 4s ease-in-out infinite;
+  overflow: hidden;
+  position: relative;
+}
+.logo-btn::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.4), transparent 60%);
+  pointer-events: none;
+}
+.logo-btn:hover {
+  transform: scale(1.08) rotate(-3deg);
+  box-shadow: var(--s1), 0 0 60px rgba(253,114,30,0.30);
+}
+@keyframes logo-pulse {
+  0%,100% { box-shadow: var(--s1), 0 0 30px rgba(253,114,30,0.12); }
+  50% { box-shadow: var(--s1), 0 0 55px rgba(253,114,30,0.28); }
+}
+
+.logo-svg { width: 72px; height: 72px; }
+.logo-pupil { animation: blink 5.5s ease-in-out infinite; transform-origin: center; }
+@keyframes blink {
+  0%,85%,100% { transform: scaleY(1); }
+  91% { transform: scaleY(0.04); }
+  93% { transform: scaleY(1); }
+  95% { transform: scaleY(0.04); }
+}
+
+.wordmark {
+  display: flex; align-items: baseline; gap: 1px;
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  font-weight: 800; letter-spacing: -0.04em; line-height: 1;
+}
+.wm-m { color: var(--ink2); }
+.wm-p {
+  background: linear-gradient(110deg, var(--or) 0%, var(--rd) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+/* ── Status pill ── */
+.status-pill {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 6px 16px 6px 12px;
+  border-radius: 999px;
+  background: rgba(253,114,30,0.06);
+  border: 1px solid rgba(253,114,30,0.22);
+  margin-bottom: 1.6rem;
+  animation: reveal-up 0.9s 0.08s cubic-bezier(0.22,1,0.36,1) both;
+}
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--or);
+  box-shadow: 0 0 8px 2px rgba(253,114,30,0.5);
+  animation: dot-blink 1.8s ease-in-out infinite;
+}
+@keyframes dot-blink { 0%,100%{opacity:1;} 50%{opacity:0.1;} }
+.status-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.64rem; color: var(--or);
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+
+/* ── Headline ── */
+.headline {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-weight: 400; font-style: italic;
+  text-align: center; line-height: 1.12;
+  max-width: 680px;
+  margin-bottom: 1rem;
+  color: var(--ink);
+  animation: reveal-up 0.9s 0.14s cubic-bezier(0.22,1,0.36,1) both;
+  letter-spacing: -0.02em;
+}
+.hl-normal {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-style: normal; font-weight: 800;
+}
+.hl-accent {
+  background: linear-gradient(105deg, var(--or) 0%, var(--rd) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  position: relative;
+}
+.hl-accent::after {
+  content: '';
+  position: absolute; bottom: -4px; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--or), var(--rd));
+  border-radius: 99px;
+  animation: underline-pulse 2s ease-in-out infinite;
+}
+@keyframes underline-pulse {
+  0%,100% { opacity: 0.5; transform: scaleX(0.95); }
+  50% { opacity: 1; transform: scaleX(1); }
+}
+
+/* ── Subtext ── */
+.sub {
+  font-size: clamp(0.92rem, 2vw, 1.05rem);
+  font-weight: 400; color: var(--mist);
+  text-align: center; max-width: 480px; line-height: 1.75;
+  margin-bottom: 0.6rem;
+  animation: reveal-up 0.9s 0.22s cubic-bezier(0.22,1,0.36,1) both;
+}
+.sub-mono {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem; font-style: italic;
+  color: var(--mist2); text-align: center;
+  margin-bottom: 2.2rem;
+  animation: reveal-up 0.9s 0.28s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+/* ── Sarcasm ticker ── */
+.ticker-wrap {
+  width: min(560px, 92vw);
+  overflow: hidden;
+  margin-bottom: 2rem;
+  border-top: 1px solid var(--border2);
+  border-bottom: 1px solid var(--border2);
+  padding: 8px 0;
+  animation: reveal-up 0.9s 0.32s cubic-bezier(0.22,1,0.36,1) both;
+  position: relative;
+}
+.ticker-wrap::before, .ticker-wrap::after {
+  content: '';
+  position: absolute; top: 0; bottom: 0; width: 40px; z-index: 2;
+  pointer-events: none;
+}
+.ticker-wrap::before { left: 0; background: linear-gradient(90deg, var(--cr), transparent); }
+.ticker-wrap::after { right: 0; background: linear-gradient(-90deg, var(--cr), transparent); }
+.ticker {
+  display: flex; white-space: nowrap;
+  animation: ticker-scroll 28s linear infinite;
+  gap: 0;
+}
+.ticker-item {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 0 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem; color: var(--mist2);
+  letter-spacing: 0.05em;
+}
+.ticker-item .sep { color: var(--or); font-size: 0.7rem; }
+@keyframes ticker-scroll { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+
+/* ── Status card ── */
+.status-card {
+  width: min(540px, 92vw);
+  background: var(--card);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 1.8rem 2rem 1.6rem;
+  box-shadow: var(--s1);
+  margin-bottom: 1.6rem;
+  position: relative; overflow: hidden;
+  animation: reveal-up 0.9s 0.38s cubic-bezier(0.22,1,0.36,1) both;
+}
+.status-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--or), var(--rd), var(--amber), var(--or));
+  background-size: 300% 100%;
+  animation: gradient-shift 3s linear infinite;
+}
+@keyframes gradient-shift { 0%{background-position:0%} 100%{background-position:300%} }
+
+.status-card::after {
+  content: '';
+  position: absolute; bottom: -40px; right: -40px;
+  width: 120px; height: 120px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(253,114,30,0.06), transparent 70%);
+  pointer-events: none;
+}
+
+.sc-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.sc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.63rem; color: var(--or);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.sc-label::before {
+  content: ''; display: inline-block;
+  width: 16px; height: 1px; background: var(--or);
+}
+.sc-timestamp {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.56rem; color: var(--mist2);
+  letter-spacing: 0.06em;
+}
+
+.sc-message {
+  font-size: 0.97rem; font-weight: 500; color: var(--ink);
+  min-height: 1.5em;
+  transition: opacity 0.3s, transform 0.3s;
+  margin-bottom: 1.2rem;
+}
+.sc-message.fade-out { opacity: 0; transform: translateY(6px); }
+.sc-message.fade-in { opacity: 1; transform: translateY(0); }
+
+/* Progress bar */
+.prog-track {
+  height: 4px; background: rgba(26,26,26,0.06); border-radius: 99px; overflow: hidden;
+  margin-bottom: 8px;
+}
+.prog-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--or), var(--rd));
+  border-radius: 99px;
+  box-shadow: 0 0 8px rgba(253,114,30,0.4);
+  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+}
+.prog-fill::after {
+  content: '';
+  position: absolute; right: -1px; top: -2px; bottom: -2px; width: 6px;
+  background: rgba(255,255,255,0.7); border-radius: 99px;
+  animation: prog-shine 1.2s ease-in-out infinite;
+}
+@keyframes prog-shine { 0%,100%{opacity:0.4;} 50%{opacity:0.9;} }
+.prog-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--mist2);
+}
+
+/* Checklist */
+.checklist {
+  margin-top: 1.2rem;
+  display: flex; flex-direction: column; gap: 6px;
+  border-top: 1px solid var(--border2);
+  padding-top: 1rem;
+}
+.check-item {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  color: var(--mist);
+  transition: color 0.4s;
+}
+.check-item.done { color: var(--ink2); }
+.check-item.fail { color: var(--rd); }
+.check-icon {
+  width: 16px; height: 16px; border-radius: 4px;
+  border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 0.6rem;
+  transition: background 0.4s, border-color 0.4s;
+}
+.check-item.done .check-icon {
+  background: linear-gradient(135deg, var(--or), var(--rd));
+  border-color: transparent; color: white;
+}
+.check-item.fail .check-icon {
+  background: rgba(255,24,3,0.1);
+  border-color: rgba(255,24,3,0.3); color: var(--rd);
+}
+
+/* ── Sarcasm card (rotating quotes) ── */
+.sarcasm-card {
+  width: min(540px, 92vw);
+  background: rgba(253,114,30,0.04);
+  border: 1px dashed rgba(253,114,30,0.28);
+  border-radius: 16px;
+  padding: 1.2rem 1.6rem;
+  margin-bottom: 1.6rem;
+  position: relative;
+  animation: reveal-up 0.9s 0.44s cubic-bezier(0.22,1,0.36,1) both;
+}
+.sarcasm-card::before {
+  content: '"';
+  position: absolute; top: -16px; left: 20px;
+  font-family: 'Instrument Serif', serif;
+  font-size: 4rem; color: var(--or);
+  line-height: 1; opacity: 0.35;
+}
+.sarcasm-text {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 0.97rem;
+  color: var(--ink2); line-height: 1.65;
+  transition: opacity 0.35s, transform 0.35s;
+}
+.sarcasm-text.out { opacity: 0; transform: translateX(-8px); }
+.sarcasm-text.in { opacity: 1; transform: translateX(0); }
+.sarcasm-attr {
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  color: var(--or); margin-top: 6px; opacity: 0.7;
+}
+
+/* ── CTA area ── */
+.cta-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 0.9rem;
+  animation: reveal-up 0.9s 0.5s cubic-bezier(0.22,1,0.36,1) both;
+}
+.cta-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: center; }
+
+.btn-primary {
+  position: relative;
+  padding: 14px 36px; border-radius: 999px; border: none;
+  background: linear-gradient(135deg, var(--or) 0%, var(--rd) 100%);
+  color: #fff;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.97rem; font-weight: 700;
+  cursor: none; outline: none; overflow: hidden;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+  box-shadow: 0 4px 24px rgba(253,114,30,0.38), 0 1px 4px rgba(26,26,26,0.1);
+  letter-spacing: -0.01em;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0);
+  transition: background 0.2s;
+}
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 8px 40px rgba(253,114,30,0.52), 0 2px 8px rgba(26,26,26,0.12);
+}
+.btn-primary:hover::before { background: rgba(255,255,255,0.1); }
+.btn-primary:active { transform: scale(0.96); }
+.btn-primary .btn-shine {
+  position: absolute; top: 0; left: -80%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  transform: skewX(-15deg);
+}
+.btn-primary:hover .btn-shine { animation: shine 0.5s ease; }
+@keyframes shine { from{left:-80%;} to{left:140%;} }
+
+.btn-ghost {
+  padding: 13px 24px; border-radius: 999px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--mist);
+  font-family: 'DM Mono', monospace; font-size: 0.72rem;
+  cursor: none; transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  letter-spacing: 0.02em;
+}
+.btn-ghost:hover { border-color: var(--or); color: var(--or); transform: translateY(-2px); }
+
+.cta-note {
+  font-family: 'DM Mono', monospace; font-size: 0.63rem;
+  color: var(--mist2); text-align: center; max-width: 340px;
+  font-style: italic;
+}
+
+/* ── Mini diagnostic grid ── */
+.diag-grid {
+  width: min(540px, 92vw);
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  margin-bottom: 1.6rem;
+  animation: reveal-up 0.9s 0.56s cubic-bezier(0.22,1,0.36,1) both;
+}
+.diag-cell {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 14px; padding: 14px 12px;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.diag-cell:hover { border-color: var(--border); transform: translateY(-2px); }
+.diag-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.05rem; font-weight: 700; color: var(--ink2);
+  display: block; margin-bottom: 4px;
+}
+.diag-val.bad { color: var(--rd); }
+.diag-val.ok { background: linear-gradient(110deg,var(--or),var(--rd)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.diag-name {
+  font-family: 'DM Mono', monospace; font-size: 0.56rem;
+  color: var(--mist2); letter-spacing: 0.08em; text-transform: uppercase;
+}
+
+/* ── Dot grids ── */
+.dots {
+  position: fixed; z-index: 0; pointer-events: none;
+  display: grid; grid-template-columns: repeat(6,1fr); gap: 24px;
+  opacity: 0.22;
+}
+.dots.tl { top: 8%; left: 6%; }
+.dots.br { bottom: 12%; right: 6%; }
+.dots span { width: 3px; height: 3px; border-radius: 50%; background: rgba(253,114,30,0.55); display: block; }
+
+/* ── Footer ── */
+footer {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 2rem;
+  background: rgba(253,250,247,0.88);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border2);
+}
+.footer-logo {
+  display: flex; align-items: center; gap: 8px; cursor: none;
+}
+.footer-logo-icon { width: 24px; height: 24px; }
+.footer-wm {
+  display: flex; align-items: baseline; gap: 1px;
+  font-size: 0.88rem; font-weight: 800; letter-spacing: -0.03em;
+}
+.footer-wm-m { color: var(--ink2); }
+.footer-wm-p { background: linear-gradient(110deg,var(--or),var(--rd)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.footer-tagline {
+  font-family: 'DM Mono', monospace; font-size: 0.57rem;
+  color: var(--mist2); letter-spacing: 0.03em;
+}
+.footer-links {
+  display: flex; gap: 1.4rem;
+}
+.footer-links a {
+  font-family: 'DM Mono', monospace; font-size: 0.64rem;
+  color: var(--mist2); text-decoration: none;
+  transition: color 0.18s;
+}
+.footer-links a:hover { color: var(--or); }
+
+/* ── Toast ── */
+#toast {
+  position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--ink); color: rgba(255,255,255,0.9);
+  padding: 10px 20px; border-radius: 999px;
+  font-family: 'DM Mono', monospace; font-size: 0.7rem;
+  white-space: nowrap;
+  opacity: 0; transition: opacity 0.3s, transform 0.3s;
+  z-index: 999; pointer-events: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Reveal animations ── */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Easter egg shutter flash ── */
+.flash-overlay {
+  position: fixed; inset: 0; z-index: 9990;
+  background: white; pointer-events: none;
+  opacity: 0; transition: opacity 0.08s;
+}
+.flash-overlay.flash { opacity: 1; transition: opacity 0s; }
+
+/* ── Responsive ── */
+@media (max-width: 540px) {
+  .footer-tagline, .footer-links { display: none; }
+  .pol:nth-child(n+5) { display: none; }
+  .diag-grid { grid-template-columns: repeat(3,1fr); gap: 7px; }
+  .diag-cell { padding: 10px 8px; }
+  .diag-val { font-size: 0.9rem; }
+  .grain-strip { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Shutter flash overlay -->
+<div class="flash-overlay" id="flash"></div>
+
+<!-- Toast notification -->
+<div id="toast"></div>
+
+<!-- Background effects -->
+<div class="grain-strip l"></div>
+<div class="grain-strip r"></div>
+
+<!-- Falling light blades -->
+<div class="blade-field" id="blade-field"></div>
+
+<!-- Floating polaroids -->
+<div class="pol-field">
+  <div class="pol" onclick="shutterClick(this)">
+    <div class="pol-img">
+      <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+        <rect width="96" height="96" fill="#FFF2E8"/>
+        <rect x="14" y="20" width="68" height="52" rx="3" fill="#FFE0C8" opacity=".6"/>
+        <ellipse cx="48" cy="46" rx="18" ry="17" fill="#FD721E" opacity=".12"/>
+        <ellipse cx="48" cy="46" rx="11" ry="10" fill="#FD721E" opacity=".3"/>
+        <ellipse cx="48" cy="46" rx="5" ry="5" fill="#FF1803" opacity=".5"/>
+        <rect x="14" y="20" width="68" height="9" rx="3" fill="#FFD0B0"/>
+        <circle cx="22" cy="24" r="2.5" fill="#FD721E" opacity=".5"/>
+        <rect x="64" y="22" width="13" height="4" rx="2" fill="#FD721E" opacity=".3"/>
+        <line x1="26" y1="54" x2="70" y2="54" stroke="#FD721E" stroke-width="1" opacity=".15"/>
+        <line x1="26" y1="60" x2="58" y2="60" stroke="#FD721E" stroke-width="1" opacity=".1"/>
+      </svg>
+    </div>
+    <div class="pol-caption">server_room_vibes.raw<br>404 smiles found</div>
+  </div>
+
+  <div class="pol" onclick="shutterClick(this)">
+    <div class="pol-img">
+      <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+        <rect width="96" height="96" fill="#FFF8F4"/>
+        <ellipse cx="48" cy="54" rx="28" ry="22" fill="#FFCFB0" opacity=".4"/>
+        <ellipse cx="48" cy="38" rx="16" ry="16" fill="#FD721E" opacity=".22"/>
+        <ellipse cx="48" cy="36" rx="9" ry="9" fill="#FF1803" opacity=".38"/>
+        <path d="M33 60 Q48 74 63 60" stroke="#FD721E" stroke-width="2.5" fill="none" opacity=".38" stroke-linecap="round"/>
+        <path d="M38 36 Q40 32 44 34" stroke="white" stroke-width="1.5" fill="none" opacity=".4" stroke-linecap="round"/>
+        <circle cx="21" cy="21" r="2" fill="#FD721E" opacity=".25"/>
+        <circle cx="75" cy="18" r="2" fill="#FF1803" opacity=".25"/>
+      </svg>
+    </div>
+    <div class="pol-caption">team_debugging.jpg<br>confidence: 404</div>
+  </div>
+
+  <div class="pol" onclick="shutterClick(this)">
+    <div class="pol-img">
+      <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+        <rect width="96" height="96" fill="#FFF4EF"/>
+        <rect x="12" y="28" width="72" height="42" rx="4" fill="#FD721E" opacity=".07"/>
+        <rect x="12" y="28" width="72" height="42" rx="4" stroke="#FD721E" stroke-width="1" fill="none" opacity=".22"/>
+        <polygon points="18,70 38,36 58,70" fill="#FD721E" opacity=".22"/>
+        <polygon points="38,70 58,46 78,70" fill="#FF1803" opacity=".15"/>
+        <circle cx="22" cy="36" r="6" fill="#FD721E" opacity=".3"/>
+        <rect x="32" y="48" width="32" height="3" rx="1.5" fill="#FD721E" opacity=".12"/>
+        <rect x="38" y="55" width="20" height="2" rx="1" fill="#FD721E" opacity=".08"/>
+      </svg>
+    </div>
+    <div class="pol-caption">uptime_chart.png<br>very optimistic</div>
+  </div>
+
+  <div class="pol" onclick="shutterClick(this)">
+    <div class="pol-img">
+      <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+        <rect width="96" height="96" fill="#FFF0EA"/>
+        <path d="M20 70 Q36 38 48 52 Q60 66 76 28" stroke="#FF1803" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".42"/>
+        <circle cx="20" cy="70" r="3.5" fill="#FF1803" opacity=".42"/>
+        <circle cx="76" cy="28" r="3.5" fill="#FD721E" opacity=".42"/>
+        <circle cx="48" cy="52" r="2.5" fill="#FD721E" opacity=".3"/>
+        <text x="48" y="22" text-anchor="middle" font-family="serif" font-size="14" fill="#FF1803" opacity=".28">♥</text>
+        <text x="30" y="30" text-anchor="middle" font-family="serif" font-size="9" fill="#FD721E" opacity=".2">♥</text>
+        <text x="66" y="66" text-anchor="middle" font-family="serif" font-size="9" fill="#FD721E" opacity=".2">♥</text>
+      </svg>
+    </div>
+    <div class="pol-caption">anniversary_backup.cr3<br>emotions: buffering</div>
+  </div>
+
+  <div class="pol" onclick="shutterClick(this)">
+    <div class="pol-img">
+      <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+        <rect width="96" height="96" fill="#FFF5F0"/>
+        <circle cx="48" cy="48" r="30" fill="none" stroke="#FD721E" stroke-width="1" opacity=".16" stroke-dasharray="5 5"/>
+        <circle cx="48" cy="48" r="19" fill="#FD721E" opacity=".06"/>
+        <path d="M48 28 L51.5 40.5 L65 40.5 L54.5 48.5 L58 61 L48 53.5 L38 61 L41.5 48.5 L31 40.5 L44.5 40.5 Z" fill="#FD721E" opacity=".32"/>
+        <circle cx="48" cy="48" r="4" fill="#FF1803" opacity=".18"/>
+      </svg>
+    </div>
+    <div class="pol-caption">birthday_magic.raw<br>still processing</div>
+  </div>
+
+  <div class="pol" onclick="shutterClick(this)">
+    <div class="pol-img">
+      <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+        <rect width="96" height="96" fill="#FFF2EE"/>
+        <rect x="22" y="22" width="52" height="52" rx="26" fill="#FD721E" opacity=".07"/>
+        <rect x="30" y="30" width="36" height="36" rx="18" fill="#FD721E" opacity=".13"/>
+        <circle cx="48" cy="42" r="10" fill="#FD721E" opacity=".24"/>
+        <circle cx="48" cy="36" r="6" fill="#FF1803" opacity=".36"/>
+        <path d="M37 56 Q48 50 59 56" stroke="#FD721E" stroke-width="2" fill="none" opacity=".38" stroke-linecap="round"/>
+        <ellipse cx="44" cy="35" rx="2" ry="1.5" fill="white" opacity=".5"/>
+      </svg>
+    </div>
+    <div class="pol-caption">wedding_final_v47.dng<br>almost done</div>
+  </div>
+</div>
+
+<!-- Decorative dots -->
+<div class="dots tl" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+<div class="dots br" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
+<!-- ────── MAIN CONTENT ────── -->
+<main class="stage">
+
+  <!-- Status pill -->
+  <div class="status-pill">
+    <div class="status-dot"></div>
+    <span class="status-text">Scheduled Chaos · ETA: Soon™</span>
+  </div>
+
+  <!-- Logo -->
+  <div class="logo-section">
+    <div class="logo-orbit">
+      <div class="orbit-ring outer"></div>
+      <div class="orbit-ring inner"></div>
+      <div class="logo-btn" id="logo-btn" onclick="triggerEasterEgg()">
+        <svg class="logo-svg" viewBox="0 0 370 369" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M44.5686 302.84C26.8419 281.804 14.0576 257.061 7.1564 230.431C0.255244 203.802 -0.587105 175.964 4.69133 148.966L43.1657 156.488C39.0119 177.734 39.6748 199.641 45.1056 220.597C50.5364 241.552 60.5969 261.024 74.5467 277.578L44.5686 302.84Z" fill="url(#g1)"/>
+          <path d="M12.2373 121.703C21.5917 95.8331 36.6278 72.39 56.239 53.0987C75.8502 33.8074 99.5374 19.1589 125.558 10.2312L138.28 47.3121C117.804 54.3376 99.1635 65.8652 83.7307 81.0463C68.2978 96.2274 56.4653 114.676 49.1039 135.034L12.2373 121.703Z" fill="url(#g1)"/>
+          <path d="M152.941 3.13459C180.022 -1.69915 207.843 -0.399101 234.355 6.93904C260.867 14.2772 285.397 27.4666 306.138 45.5369L280.387 75.0956C264.064 60.8754 244.761 50.496 223.897 44.7213C203.034 38.9467 181.141 37.9236 159.83 41.7275L152.941 3.13459Z" fill="url(#g1)"/>
+          <path d="M152.941 3.13459C180.022 -1.69915 207.843 -0.399101 234.355 6.93904C260.867 14.2772 285.397 27.4666 306.138 45.5369L280.387 75.0956C264.064 60.8754 244.761 50.496 223.897 44.7213C203.034 38.9467 181.141 37.9236 159.83 41.7275L152.941 3.13459Z" fill="black" fill-opacity="0.17"/>
+          <path d="M325.976 65.7035C343.703 86.7395 356.487 111.483 363.388 138.112C370.289 164.742 371.132 192.579 365.853 219.577L327.379 212.055C331.533 190.809 330.87 168.903 325.439 147.947C320.008 126.991 309.948 107.52 295.998 90.9655L325.976 65.7035Z" fill="url(#g1)"/>
+          <path d="M358.307 246.841C348.953 272.71 333.917 296.154 314.306 315.445C294.695 334.736 271.007 349.385 244.987 358.312L232.264 321.231C252.741 314.206 271.381 302.678 286.814 287.497C302.247 272.316 314.079 253.868 321.441 233.51L358.307 246.841Z" fill="url(#g1)"/>
+          <path d="M358.307 246.841C348.953 272.71 333.917 296.154 314.306 315.445C294.695 334.736 271.007 349.385 244.987 358.312L232.264 321.231C252.741 314.206 271.381 302.678 286.814 287.497C302.247 272.316 314.079 253.868 321.441 233.51L358.307 246.841Z" fill="black" fill-opacity="0.17"/>
+          <path d="M217.604 365.409C190.523 370.243 162.702 368.943 136.19 361.605C109.677 354.266 85.1479 341.077 64.4062 323.007L90.1578 293.448C106.48 307.668 125.784 318.048 146.647 323.822C167.511 329.597 189.404 330.62 210.715 326.816L217.604 365.409Z" fill="url(#g1)"/>
+          <circle cx="185.5" cy="183.5" r="127.5" fill="#D2D3D7"/>
+          <circle cx="185.5" cy="183.5" r="101.121" fill="#515151"/>
+          <circle cx="185.5" cy="183.5" r="92.3276" fill="#3D3D3D"/>
+          <circle class="logo-pupil" cx="184.621" cy="182.62" r="38.6897" fill="#050601"/>
+          <path d="M131.895 194.876C129.97 195.471 127.915 194.396 127.451 192.436C124.732 180.945 125.855 168.874 130.648 158.083C131.465 156.242 133.684 155.564 135.465 156.504C137.247 157.443 137.915 159.645 137.117 161.494C133.203 170.562 132.265 180.642 134.438 190.276C134.882 192.241 133.819 194.281 131.895 194.876Z" fill="#F6F6F6"/>
+          <path d="M111.553 206.404C110.937 206.594 110.282 206.249 110.101 205.63C106.725 194.097 106.094 181.927 108.266 170.096C110.508 157.883 115.671 146.392 123.314 136.605C130.958 126.818 140.855 119.025 152.162 113.891C163.114 108.917 175.074 106.581 187.081 107.062C187.726 107.088 188.22 107.64 188.184 108.284C188.148 108.928 187.597 109.42 186.953 109.395C175.321 108.935 163.737 111.2 153.128 116.018C142.164 120.997 132.567 128.553 125.156 138.043C117.744 147.533 112.738 158.675 110.564 170.518C108.46 181.978 109.068 193.766 112.333 204.94C112.514 205.559 112.17 206.213 111.553 206.404Z" fill="#F6F6F6"/>
+          <path d="M138.677 151.071C137.068 149.944 136.668 147.717 137.898 146.185C145.33 136.931 155.61 130.381 167.138 127.554C169.046 127.086 170.895 128.39 171.236 130.324C171.578 132.259 170.281 134.091 168.378 134.578C158.704 137.053 150.07 142.555 143.74 150.277C142.495 151.796 140.287 152.198 138.677 151.071Z" fill="#F6F6F6"/>
+          <ellipse cx="208.5" cy="224" rx="3.5" ry="4" fill="#F6F6F6"/>
+          <defs>
+            <linearGradient id="g1" x1="242.83" y1="70.146" x2="53.96" y2="254.022" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FD721E"/><stop offset="1" stop-color="#FF1803"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+    <div class="wordmark"><span class="wm-m">Moment</span><span class="wm-p">Pik</span></div>
+  </div>
+
+  <!-- Headline -->
+  <h1 class="headline">
+    We're <span class="hl-normal hl-accent">technically</span><br>
+    still <em>existing</em> — just<br>
+    <span class="hl-normal">barely.</span>
+  </h1>
+
+  <p class="sub">
+    Our servers have gone full introvert — they need a moment.
+    Your precious memories are absolutely fine. It's our 
+    collective dignity that's under reconstruction.
+  </p>
+  <p class="sub-mono">// est. fix time: "soon" (engineers define this differently than humans)</p>
+
+  <!-- Sarcasm ticker -->
+  <div class="ticker-wrap">
+    <div class="ticker" id="ticker">
+      <span class="ticker-item">404: sarcasm module working perfectly <span class="sep">◆</span></span>
+      <span class="ticker-item">servers in group therapy since 09:42am <span class="sep">◆</span></span>
+      <span class="ticker-item">your photos are safe. our uptime, less so <span class="sep">◆</span></span>
+      <span class="ticker-item">rebooted 7 times. now it's personal <span class="sep">◆</span></span>
+      <span class="ticker-item">stack overflow: the website AND our situation <span class="sep">◆</span></span>
+      <span class="ticker-item">coffee consumed: ∞ · bugs fixed: lol <span class="sep">◆</span></span>
+      <span class="ticker-item">no developers were harmed (emotionally debatable) <span class="sep">◆</span></span>
+      <span class="ticker-item">404: sarcasm module working perfectly <span class="sep">◆</span></span>
+      <span class="ticker-item">servers in group therapy since 09:42am <span class="sep">◆</span></span>
+      <span class="ticker-item">your photos are safe. our uptime, less so <span class="sep">◆</span></span>
+      <span class="ticker-item">rebooted 7 times. now it's personal <span class="sep">◆</span></span>
+      <span class="ticker-item">stack overflow: the website AND our situation <span class="sep">◆</span></span>
+      <span class="ticker-item">coffee consumed: ∞ · bugs fixed: lol <span class="sep">◆</span></span>
+      <span class="ticker-item">no developers were harmed (emotionally debatable) <span class="sep">◆</span></span>
+    </div>
+  </div>
+
+  <!-- Sarcasm quote card -->
+  <div class="sarcasm-card">
+    <div class="sarcasm-text in" id="sarcasm-text">Have you tried closing the browser and reopening it? Our engineers did. To the servers. Twelve times.</div>
+    <div class="sarcasm-attr" id="sarcasm-attr">— The Dev Team, 9:47am, still in pajamas</div>
+  </div>
+
+  <!-- Status card -->
+  <div class="status-card">
+    <div class="sc-header">
+      <div class="sc-label">Live Situation Report</div>
+      <div class="sc-timestamp" id="sc-time">00:00:00 UTC</div>
+    </div>
+    <div class="sc-message fade-in" id="sc-msg">Attempting to convince the server it has intrinsic value…</div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="prog-meta">
+      <span id="prog-label">Summoning the cloud…</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="checklist" id="checklist">
+      <div class="check-item" id="c1"><div class="check-icon">·</div><span>Server acknowledged our existence</span></div>
+      <div class="check-item" id="c2"><div class="check-icon">·</div><span>Database agreeing to cooperate</span></div>
+      <div class="check-item" id="c3"><div class="check-icon">·</div><span>Cache cleared (emotional baggage pending)</span></div>
+      <div class="check-item" id="c4"><div class="check-icon">·</div><span>Blamed intern, undid blame, blamed DNS</span></div>
+    </div>
+  </div>
+
+  <!-- Diagnostic mini-grid -->
+  <div class="diag-grid">
+    <div class="diag-cell">
+      <span class="diag-val ok" id="dv-uptime">98.2%</span>
+      <span class="diag-name">Monthly Uptime</span>
+    </div>
+    <div class="diag-cell">
+      <span class="diag-val bad" id="dv-today">0%</span>
+      <span class="diag-name">Today's Uptime</span>
+    </div>
+    <div class="diag-cell">
+      <span class="diag-val" id="dv-clicks">0</span>
+      <span class="diag-name">Retry Clicks</span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-wrap">
+    <div class="cta-row">
+      <button class="btn-primary" id="retry-btn" onclick="handleRetry()">
+        <div class="btn-shine"></div>
+        <span id="btn-label">Give it another shot 📸</span>
+      </button>
+      <button class="btn-ghost" onclick="handleNotify()">Notify me when alive</button>
+    </div>
+    <p class="cta-note" id="cta-note">Clicking this button is a valid form of emotional processing. We won't judge.</p>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">
+    <svg class="footer-logo-icon" viewBox="0 0 370 369" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M44.5686 302.84C26.8419 281.804 14.0576 257.061 7.1564 230.431C0.255244 203.802 -0.587105 175.964 4.69133 148.966L43.1657 156.488C39.0119 177.734 39.6748 199.641 45.1056 220.597C50.5364 241.552 60.5969 261.024 74.5467 277.578L44.5686 302.84Z" fill="url(#gf)"/>
+      <path d="M12.2373 121.703C21.5917 95.8331 36.6278 72.39 56.239 53.0987C75.8502 33.8074 99.5374 19.1589 125.558 10.2312L138.28 47.3121C117.804 54.3376 99.1635 65.8652 83.7307 81.0463C68.2978 96.2274 56.4653 114.676 49.1039 135.034L12.2373 121.703Z" fill="url(#gf)"/>
+      <path d="M152.941 3.13459C180.022 -1.69915 207.843 -0.399101 234.355 6.93904C260.867 14.2772 285.397 27.4666 306.138 45.5369L280.387 75.0956C264.064 60.8754 244.761 50.496 223.897 44.7213C203.034 38.9467 181.141 37.9236 159.83 41.7275L152.941 3.13459Z" fill="url(#gf)"/>
+      <path d="M325.976 65.7035C343.703 86.7395 356.487 111.483 363.388 138.112C370.289 164.742 371.132 192.579 365.853 219.577L327.379 212.055C331.533 190.809 330.87 168.903 325.439 147.947C320.008 126.991 309.948 107.52 295.998 90.9655L325.976 65.7035Z" fill="url(#gf)"/>
+      <path d="M358.307 246.841C348.953 272.71 333.917 296.154 314.306 315.445C294.695 334.736 271.007 349.385 244.987 358.312L232.264 321.231C252.741 314.206 271.381 302.678 286.814 287.497C302.247 272.316 314.079 253.868 321.441 233.51L358.307 246.841Z" fill="url(#gf)"/>
+      <path d="M217.604 365.409C190.523 370.243 162.702 368.943 136.19 361.605C109.677 354.266 85.1479 341.077 64.4062 323.007L90.1578 293.448C106.48 307.668 125.784 318.048 146.647 323.822C167.511 329.597 189.404 330.62 210.715 326.816L217.604 365.409Z" fill="url(#gf)"/>
+      <circle cx="185.5" cy="183.5" r="127.5" fill="#D2D3D7"/>
+      <circle cx="185.5" cy="183.5" r="101.121" fill="#515151"/>
+      <circle cx="185.5" cy="183.5" r="92.3276" fill="#3D3D3D"/>
+      <circle cx="184.621" cy="182.62" r="38.6897" fill="#050601"/>
+      <path d="M131.895 194.876C129.97 195.471 127.915 194.396 127.451 192.436C124.732 180.945 125.855 168.874 130.648 158.083C131.465 156.242 133.684 155.564 135.465 156.504C137.247 157.443 137.915 159.645 137.117 161.494C133.203 170.562 132.265 180.642 134.438 190.276C134.882 192.241 133.819 194.281 131.895 194.876Z" fill="#F6F6F6"/>
+      <path d="M111.553 206.404C110.937 206.594 110.282 206.249 110.101 205.63C106.725 194.097 106.094 181.927 108.266 170.096C110.508 157.883 115.671 146.392 123.314 136.605C130.958 126.818 140.855 119.025 152.162 113.891C163.114 108.917 175.074 106.581 187.081 107.062C187.726 107.088 188.22 107.64 188.184 108.284C188.148 108.928 187.597 109.42 186.953 109.395C175.321 108.935 163.737 111.2 153.128 116.018C142.164 120.997 132.567 128.553 125.156 138.043C117.744 147.533 112.738 158.675 110.564 170.518C108.46 181.978 109.068 193.766 112.333 204.94C112.514 205.559 112.17 206.213 111.553 206.404Z" fill="#F6F6F6"/>
+      <path d="M138.677 151.071C137.068 149.944 136.668 147.717 137.898 146.185C145.33 136.931 155.61 130.381 167.138 127.554C169.046 127.086 170.895 128.39 171.236 130.324C171.578 132.259 170.281 134.091 168.378 134.578C158.704 137.053 150.07 142.555 143.74 150.277C142.495 151.796 140.287 152.198 138.677 151.071Z" fill="#F6F6F6"/>
+      <ellipse cx="208.5" cy="224" rx="3.5" ry="4" fill="#F6F6F6"/>
+      <defs><linearGradient id="gf" x1="242.83" y1="70.146" x2="53.96" y2="254.022" gradientUnits="userSpaceOnUse"><stop stop-color="#FD721E"/><stop offset="1" stop-color="#FF1803"/></linearGradient></defs>
+    </svg>
+    <div class="footer-wm"><span class="footer-wm-m">Moment</span><span class="footer-wm-p">Pik</span></div>
+  </div>
+  <div class="footer-tagline">Photos that Find You — even when we can't find ourselves.</div>
+  <div class="footer-links">
+    <a href="https://momentpik.com">Home</a>
+    <a href="mailto:hello@momentpik.com">Contact</a>
+    <a href="#" onclick="return false;">Status</a>
+  </div>
+</footer>
+
+<script>
+// ── Cursor ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = -100, my = -100, rx = -100, ry = -100;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animCursor() {
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+})();
+document.querySelectorAll('button, .pol, .logo-btn, a, [onclick]').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '20px'; cursor.style.height = '20px';
+    ring.style.width = '50px'; ring.style.height = '50px';
+    ring.style.borderColor = 'var(--rd)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '12px'; cursor.style.height = '12px';
+    ring.style.width = '36px'; ring.style.height = '36px';
+    ring.style.borderColor = 'var(--or)';
+  });
+});
+
+// ── Falling blades ──
+const bladeField = document.getElementById('blade-field');
+function spawnBlade() {
+  const b = document.createElement('div');
+  b.className = 'blade';
+  const x = Math.random() * 100;
+  const h = 40 + Math.random() * 80;
+  const dur = 6 + Math.random() * 10;
+  const rot = -20 + Math.random() * 40;
+  const delay = Math.random() * 8;
+  b.style.cssText = `left:${x}%;height:${h}px;--rot:${rot}deg;animation-duration:${dur}s;animation-delay:${delay}s;`;
+  bladeField.appendChild(b);
+  setTimeout(() => b.remove(), (dur + delay) * 1000 + 500);
+}
+for (let i = 0; i < 18; i++) setTimeout(spawnBlade, i * 600);
+setInterval(spawnBlade, 1200);
+
+// ── Clock ──
+function updateClock() {
+  const now = new Date();
+  document.getElementById('sc-time').textContent =
+    now.toUTCString().split(' ')[4] + ' UTC';
+}
+setInterval(updateClock, 1000); updateClock();
+
+// ── Status messages ──
+const msgs = [
+  "Attempting to convince the server it has intrinsic value…",
+  "Performing surgery on a production database (with gloves this time)…",
+  "Begging the CDN to please, please cooperate…",
+  "Checking if we accidentally deleted the internet…",
+  "Teaching the load balancer about work-life balance…",
+  "Apologizing to the cache for clearing it without notice…",
+  "Running `git blame` — everyone is equally traumatized…",
+  "Sending the server a motivational poster…",
+  "Confirming the cloud is, indeed, still a cloud…",
+  "Rehydrating our engineer after 6 hours of bug hunting…",
+];
+const progLabels = ["Summoning the cloud…", "Negotiating uptime…", "Bribing the database…", "Almost convincing it…", "Polishing the pixels…"];
+let msgIdx = 0, progVal = 0, retryCount = 0;
+
+const scMsg = document.getElementById('sc-msg');
+const progFill = document.getElementById('prog-fill');
+const progPct = document.getElementById('prog-pct');
+const progLabel = document.getElementById('prog-label');
+
+function rotateMsg() {
+  scMsg.classList.remove('fade-in'); scMsg.classList.add('fade-out');
+  setTimeout(() => {
+    msgIdx = (msgIdx + 1) % msgs.length;
+    scMsg.textContent = msgs[msgIdx];
+    scMsg.classList.remove('fade-out'); scMsg.classList.add('fade-in');
+  }, 320);
+}
+setInterval(rotateMsg, 3500);
+
+// Progress creep
+function tickProgress() {
+  if (progVal < 79) {
+    const speed = progVal < 35 ? 0.6 : progVal < 60 ? 0.25 : 0.07;
+    progVal = Math.min(79, progVal + speed + Math.random() * 0.3);
+    progFill.style.width = progVal.toFixed(1) + '%';
+    progPct.textContent = Math.round(progVal) + '%';
+    progLabel.textContent = progLabels[Math.min(Math.floor(progVal / 18), 4)];
+  }
+}
+setInterval(tickProgress, 90);
+
+// Checklist auto-progress
+const checks = ['c1','c2','c3','c4'];
+const checkDelay = [2800, 6500, 11000, 17000];
+checks.forEach((id, i) => {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const icon = el.querySelector('.check-icon');
+    // c3 "fails" first for comedy, then succeeds
+    if (id === 'c3') {
+      el.classList.add('fail'); icon.textContent = '✕';
+      setTimeout(() => { el.classList.remove('fail'); el.classList.add('done'); icon.textContent = '✓'; }, 2200);
+    } else {
+      el.classList.add('done'); icon.textContent = '✓';
+    }
+  }, checkDelay[i]);
+});
+
+// ── Sarcasm quotes ──
+const sarcasms = [
+  { text: "Have you tried closing the browser and reopening it? Our engineers did. To the servers. Twelve times.", attr: "— The Dev Team, 9:47am, still in pajamas" },
+  { text: "Our uptime monitoring is currently down. We're monitoring it manually by refreshing the page and sighing.", attr: "— Lead Engineer, who hasn't blinked since Tuesday" },
+  { text: "The good news: your memories are 100% safe. The bad news: we need a moment to remember where we put them.", attr: "— MomentPik Support Bot (also down)" },
+  { text: "We've tried turning it off and on again. It took it personally. We're in arbitration.", attr: "— Server Relations Department (est. today)" },
+  { text: "It's not a bug. It's a carefully curated pause to help you appreciate the app more when it returns.", attr: "— Our PM, who is extremely creative with words" },
+  { text: "Five engineers. Three Red Bulls. One mysterious error. Zero explanations. Welcome to Tuesday.", attr: "— Anonymous Slack message, pinned for morale" },
+];
+let sarIdx = 0;
+const sarcasmText = document.getElementById('sarcasm-text');
+const sarcasmAttr = document.getElementById('sarcasm-attr');
+
+function rotateSarcasm() {
+  sarcasmText.classList.remove('in'); sarcasmText.classList.add('out');
+  setTimeout(() => {
+    sarIdx = (sarIdx + 1) % sarcasms.length;
+    sarcasmText.textContent = sarcasms[sarIdx].text;
+    sarcasmAttr.textContent = sarcasms[sarIdx].attr;
+    sarcasmText.classList.remove('out'); sarcasmText.classList.add('in');
+  }, 380);
+}
+setInterval(rotateSarcasm, 5000);
+
+// ── Retry button ──
+const retryLabels = [
+  "Give it another shot 📸",
+  "Still you. Still trying. 💪",
+  "Okay third time's a charm →",
+  "At this point it's a ritual 🙏",
+  "We respect the dedication 🫡",
+  "You and the button: soulmates 💍",
+  "Philosophers have studied this —",
+  "We've named this button after you",
+];
+const retryNotes = [
+  "Clicking this button is a valid form of emotional processing. We won't judge.",
+  "The servers noticed. They're trying harder now. Allegedly.",
+  "Bold strategy. Results pending. Very pending.",
+  "You and the button have something real.",
+  "At this point, mutual respect has been established.",
+  "Commitment unlocked. Achievement: True Believer.",
+  "Nietzsche would approve of this retry loop.",
+  "You have become part of our uptime mythology.",
+];
+const dvClicks = document.getElementById('dv-clicks');
+
+function handleRetry() {
+  retryCount++;
+  dvClicks.textContent = retryCount;
+  const i = Math.min(retryCount - 1, retryLabels.length - 1);
+  document.getElementById('btn-label').textContent = retryLabels[i];
+  document.getElementById('cta-note').textContent = retryNotes[i];
+
+  // Reset progress
+  progVal = 0;
+  progFill.style.transition = 'none';
+  progFill.style.width = '0%';
+  progPct.textContent = '0%';
+  setTimeout(() => { progFill.style.transition = 'width 0.5s cubic-bezier(0.4,0,0.2,1)'; }, 60);
+
+  // Logo bounce
+  const logo = document.getElementById('logo-btn');
+  logo.style.transform = 'scale(0.86) rotate(5deg)';
+  setTimeout(() => { logo.style.transform = ''; }, 180);
+
+  showToast(retryCount <= 2
+    ? "Retry signal sent! (The server nodded.)"
+    : retryCount <= 4
+      ? "Still sending. It's more of a lifestyle now."
+      : "You are our most loyal user. Genuinely touched. 🥲");
+}
+
+function handleNotify() {
+  showToast("We'll email you! (Once our email server is also back up.)");
+}
+
+// ── Toast ──
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ── Easter egg: shutter flash on logo click ──
+function triggerEasterEgg() {
+  const flash = document.getElementById('flash');
+  flash.classList.add('flash');
+  setTimeout(() => flash.classList.remove('flash'), 100);
+  setTimeout(() => showToast("📸 *click* — captured your frustration. Beautiful shot."), 150);
+}
+
+// ── Polaroid shutter click ──
+function shutterClick(el) {
+  el.style.transform = el.style.transform + ' scale(0.93)';
+  triggerFlash();
+  setTimeout(() => { el.style.transform = ''; }, 140);
+  showToast("Snap! At least something's working around here 📸");
+}
+function triggerFlash() {
+  const flash = document.getElementById('flash');
+  flash.classList.add('flash');
+  setTimeout(() => flash.classList.remove('flash'), 90);
+}
+
+// ── Diagnostic: live uptime counter ──
+const dvToday = document.getElementById('dv-today');
+let todayUptime = 0;
+setTimeout(() => {
+  setInterval(() => {
+    todayUptime = Math.min(todayUptime + 0.01, 99.9);
+    dvToday.textContent = todayUptime.toFixed(1) + '%';
+    if (todayUptime > 5) dvToday.classList.remove('bad');
+  }, 3000);
+}, 8000);
+
+// ── Konami code easter egg ──
+const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+let kIdx = 0;
+document.addEventListener('keydown', e => {
+  if (e.key === konami[kIdx]) { kIdx++; }
+  else { kIdx = 0; }
+  if (kIdx === konami.length) {
+    kIdx = 0;
+    showToast("🎮 Konami code! +30 years of uptime added. You're welcome.");
+    for (let i = 0; i < 6; i++) setTimeout(spawnBlade, i * 100);
+  }
+});
+</script>
+</body>
+</html>
