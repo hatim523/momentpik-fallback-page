@@ -6,574 +6,459 @@
 <title>MomentPik — Having an Existential Crisis BRB</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 
-:root {
-  --cr: #FDFAF7;
-  --ink: #1A1A1A;
-  --ink2: #3A3A3A;
-  --mist: rgba(26,26,26,0.42);
-  --mist2: rgba(26,26,26,0.24);
-  --or: #FD721E;
-  --rd: #FF1803;
-  --amber: #FF9A1F;
-  --card: rgba(255,255,255,0.72);
-  --border: rgba(253,114,30,0.16);
-  --border2: rgba(26,26,26,0.07);
-  --glow-or: rgba(253,114,30,0.28);
-  --glow-rd: rgba(255,24,3,0.18);
-  --s1: 0 2px 20px rgba(26,26,26,0.06), 0 8px 40px rgba(26,26,26,0.04);
-  --s2: 0 4px 40px rgba(253,114,30,0.18), 0 2px 10px rgba(26,26,26,0.06);
+:root{
+  --cr:#FDFAF7;--ink:#1A1A1A;--ink2:#3A3A3A;
+  --mist:rgba(26,26,26,0.42);--mist2:rgba(26,26,26,0.24);
+  --or:#FD721E;--rd:#FF1803;--amber:#FF9A1F;
+  --card:rgba(255,255,255,0.74);
+  --border:rgba(253,114,30,0.18);--border2:rgba(26,26,26,0.07);
+  --s1:0 2px 20px rgba(26,26,26,0.06),0 8px 40px rgba(26,26,26,0.04);
 }
 
-html { scroll-behavior: smooth; }
+html,body{height:100%;overflow:hidden;}
 
-body {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  background: var(--cr);
-  color: var(--ink);
-  overflow-x: hidden;
-  min-height: 100vh;
-  cursor: none;
+body{
+  font-family:'Bricolage Grotesque',sans-serif;
+  background:var(--cr);color:var(--ink);cursor:none;
+}
+
+/* ── Mesh background ── */
+.bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 800px 500px at 0% 0%,rgba(253,114,30,0.08) 0%,transparent 60%),
+    radial-gradient(ellipse 600px 450px at 100% 100%,rgba(255,24,3,0.06) 0%,transparent 60%),
+    radial-gradient(ellipse 400px 300px at 75% 15%,rgba(255,154,31,0.05) 0%,transparent 60%);
+}
+/* subtle noise */
+.bg::after{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:0.6;
 }
 
 /* ── Custom cursor ── */
-#cursor {
-  position: fixed; width: 12px; height: 12px;
-  background: var(--or); border-radius: 50%;
-  pointer-events: none; z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
-  mix-blend-mode: multiply;
+#cursor{
+  position:fixed;width:11px;height:11px;
+  background:var(--or);border-radius:50%;
+  pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width .18s,height .18s,background .18s;
+  mix-blend-mode:multiply;
 }
-#cursor-ring {
-  position: fixed; width: 36px; height: 36px;
-  border: 1.5px solid var(--or); border-radius: 50%;
-  pointer-events: none; z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: transform 0.12s ease, width 0.25s, height 0.25s, border-color 0.2s;
-  opacity: 0.6;
-}
-
-/* ── Noise overlay ── */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none; opacity: 0.7;
+#cursor-ring{
+  position:fixed;width:34px;height:34px;
+  border:1.5px solid var(--or);border-radius:50%;
+  pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:width .25s,height .25s,border-color .2s;
+  opacity:.55;
 }
 
-/* ── Gradient mesh bg ── */
-body::after {
-  content: '';
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 900px 600px at 5% 10%, rgba(253,114,30,0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 600px 500px at 95% 90%, rgba(255,24,3,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 500px 400px at 80% 20%, rgba(255,154,31,0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 400px 300px at 20% 80%, rgba(253,114,30,0.04) 0%, transparent 60%);
+/* ── Flash ── */
+.flash-overlay{
+  position:fixed;inset:0;z-index:9990;background:white;
+  pointer-events:none;opacity:0;transition:opacity .08s;
 }
-
-/* ── Floating shutter blades ── */
-.blade-field { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
-.blade {
-  position: absolute; width: 2px;
-  background: linear-gradient(180deg, transparent, rgba(253,114,30,0.15), transparent);
-  border-radius: 99px; animation: blade-fall linear infinite;
-  transform-origin: top center;
-}
-@keyframes blade-fall {
-  0% { transform: translateY(-120px) rotate(var(--rot)); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 0.6; }
-  100% { transform: translateY(110vh) rotate(var(--rot)); opacity: 0; }
-}
-
-/* ── Film grain strips ── */
-.grain-strip {
-  position: fixed; top: 0; bottom: 0; width: 3px;
-  background: repeating-linear-gradient(180deg, transparent 0px, transparent 6px, rgba(253,114,30,0.06) 6px, rgba(253,114,30,0.06) 7px);
-  pointer-events: none; z-index: 1;
-  animation: grain-flicker 0.15s steps(1) infinite;
-}
-.grain-strip.l { left: 5%; }
-.grain-strip.r { right: 5%; }
-@keyframes grain-flicker { 0%,100%{opacity:0.5;} 33%{opacity:0.8;} 66%{opacity:0.3;} }
-
-/* ── Polaroid cluster ── */
-.pol-field { position: fixed; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
-.pol {
-  position: absolute; width: 110px; background: #fff;
-  padding: 7px 7px 28px;
-  box-shadow: 0 8px 32px rgba(26,26,26,0.10), 0 1px 4px rgba(26,26,26,0.05);
-  border-radius: 1px; transition: box-shadow 0.3s, filter 0.3s;
-  pointer-events: auto; cursor: none;
-}
-.pol:hover {
-  box-shadow: 0 20px 56px rgba(253,114,30,0.20), 0 4px 12px rgba(26,26,26,0.10);
-  filter: brightness(1.02); z-index: 10;
-}
-.pol-img {
-  width: 100%; aspect-ratio: 1; background: #f5f0ec;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden; border-radius: 1px; position: relative;
-}
-.pol-img::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 50%, rgba(253,114,30,0.06) 100%);
-}
-.pol-caption { margin-top: 6px; font-family: 'DM Mono', monospace; font-size: 0.42rem; color: rgba(26,26,26,0.32); text-align: center; letter-spacing: 0.03em; line-height: 1.4; }
-
-.pol:nth-child(1) { top: 5%; left: 2%; animation: pol-drift-a 14s ease-in-out infinite; }
-.pol:nth-child(2) { top: 8%; right: 3%; animation: pol-drift-b 17s ease-in-out infinite; }
-.pol:nth-child(3) { bottom: 22%; left: 1.5%; animation: pol-drift-c 16s ease-in-out infinite; }
-.pol:nth-child(4) { bottom: 18%; right: 2%; animation: pol-drift-a 19s ease-in-out infinite reverse; }
-.pol:nth-child(5) { top: 42%; left: 0%; animation: pol-drift-b 21s ease-in-out infinite 2s; }
-.pol:nth-child(6) { top: 38%; right: 0.5%; animation: pol-drift-c 15s ease-in-out infinite 1s; }
-
-@keyframes pol-drift-a { 0%,100%{transform:rotate(-12deg) translate(0,0);} 30%{transform:rotate(-9deg) translate(6px,-14px);} 65%{transform:rotate(-14deg) translate(-4px,8px);} }
-@keyframes pol-drift-b { 0%,100%{transform:rotate(10deg) translate(0,0);} 40%{transform:rotate(13deg) translate(-8px,-12px);} 70%{transform:rotate(7deg) translate(5px,10px);} }
-@keyframes pol-drift-c { 0%,100%{transform:rotate(7deg) translate(0,0);} 35%{transform:rotate(4deg) translate(10px,-8px);} 65%{transform:rotate(10deg) translate(-6px,12px);} }
-
-/* ── Main layout ── */
-.stage {
-  position: relative; z-index: 3;
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 3rem 1.5rem 6rem;
-}
-
-/* ── Logo section ── */
-.logo-section {
-  display: flex; flex-direction: column; align-items: center;
-  margin-bottom: 2.2rem;
-  animation: reveal-up 0.9s cubic-bezier(0.22,1,0.36,1) both;
-}
-.logo-orbit { position: relative; width: 110px; height: 110px; margin-bottom: 1.2rem; }
-.orbit-ring { position: absolute; inset: 0; border-radius: 50%; }
-.orbit-ring.outer { border: 1px dashed rgba(253,114,30,0.30); animation: spin-cw 22s linear infinite; inset: -18px; }
-.orbit-ring.outer::before {
-  content: ''; position: absolute; width: 8px; height: 8px; border-radius: 50%;
-  background: var(--or); top: -4px; left: 50%; transform: translateX(-50%);
-  box-shadow: 0 0 12px 3px rgba(253,114,30,0.55);
-  animation: orbit-pulse 2s ease-in-out infinite;
-}
-@keyframes orbit-pulse { 0%,100%{box-shadow:0 0 8px 2px rgba(253,114,30,0.45);} 50%{box-shadow:0 0 18px 5px rgba(253,114,30,0.75);} }
-.orbit-ring.inner { border: 1px solid rgba(253,114,30,0.12); animation: spin-ccw 16s linear infinite; inset: -8px; }
-@keyframes spin-cw { to{transform:rotate(360deg);} }
-@keyframes spin-ccw { to{transform:rotate(-360deg);} }
-
-.logo-btn {
-  width: 110px; height: 110px; border-radius: 50%;
-  background: var(--card); backdrop-filter: blur(20px);
-  border: 1.5px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: var(--s1), 0 0 40px rgba(253,114,30,0.14);
-  cursor: none; transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
-  animation: logo-pulse 4s ease-in-out infinite; overflow: hidden; position: relative;
-}
-.logo-btn::before {
-  content: ''; position: absolute; inset: 0; border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.4), transparent 60%);
-  pointer-events: none;
-}
-.logo-btn:hover { transform: scale(1.08) rotate(-3deg); box-shadow: var(--s1), 0 0 60px rgba(253,114,30,0.30); }
-@keyframes logo-pulse { 0%,100%{box-shadow:var(--s1),0 0 30px rgba(253,114,30,0.12);} 50%{box-shadow:var(--s1),0 0 55px rgba(253,114,30,0.28);} }
-
-.logo-svg { width: 72px; height: 72px; }
-.logo-pupil { animation: blink 5.5s ease-in-out infinite; transform-origin: center; }
-@keyframes blink { 0%,85%,100%{transform:scaleY(1);} 91%{transform:scaleY(0.04);} 93%{transform:scaleY(1);} 95%{transform:scaleY(0.04);} }
-
-.wordmark { display: flex; align-items: baseline; gap: 1px; font-size: clamp(1.6rem, 4vw, 2.1rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
-.wm-m { color: var(--ink2); }
-.wm-p { background: linear-gradient(110deg, var(--or) 0%, var(--rd) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-
-/* ── Status pill ── */
-.status-pill {
-  display: inline-flex; align-items: center; gap: 9px;
-  padding: 6px 16px 6px 12px; border-radius: 999px;
-  background: rgba(253,114,30,0.06); border: 1px solid rgba(253,114,30,0.22);
-  margin-bottom: 1.6rem;
-  animation: reveal-up 0.9s 0.08s cubic-bezier(0.22,1,0.36,1) both;
-}
-.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--or); box-shadow: 0 0 8px 2px rgba(253,114,30,0.5); animation: dot-blink 1.8s ease-in-out infinite; }
-@keyframes dot-blink { 0%,100%{opacity:1;} 50%{opacity:0.1;} }
-.status-text { font-family: 'DM Mono', monospace; font-size: 0.64rem; color: var(--or); letter-spacing: 0.12em; text-transform: uppercase; }
-
-/* ── Headline ── */
-.headline {
-  font-family: 'Instrument Serif', serif; font-size: clamp(2.2rem, 6vw, 4rem);
-  font-weight: 400; font-style: italic; text-align: center; line-height: 1.12;
-  max-width: 680px; margin-bottom: 1rem; color: var(--ink);
-  animation: reveal-up 0.9s 0.14s cubic-bezier(0.22,1,0.36,1) both; letter-spacing: -0.02em;
-}
-.hl-normal { font-family: 'Bricolage Grotesque', sans-serif; font-style: normal; font-weight: 800; }
-.hl-accent { background: linear-gradient(105deg, var(--or) 0%, var(--rd) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; position: relative; }
-.hl-accent::after { content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--or), var(--rd)); border-radius: 99px; animation: underline-pulse 2s ease-in-out infinite; }
-@keyframes underline-pulse { 0%,100%{opacity:0.5;transform:scaleX(0.95);} 50%{opacity:1;transform:scaleX(1);} }
-
-/* ── Subtext ── */
-.sub { font-size: clamp(0.92rem, 2vw, 1.05rem); font-weight: 400; color: var(--mist); text-align: center; max-width: 480px; line-height: 1.75; margin-bottom: 0.6rem; animation: reveal-up 0.9s 0.22s cubic-bezier(0.22,1,0.36,1) both; }
-.sub-mono { font-family: 'DM Mono', monospace; font-size: 0.68rem; font-style: italic; color: var(--mist2); text-align: center; margin-bottom: 2.2rem; animation: reveal-up 0.9s 0.28s cubic-bezier(0.22,1,0.36,1) both; }
-
-/* ── Sarcasm ticker ── */
-.ticker-wrap {
-  width: min(560px, 92vw); overflow: hidden; margin-bottom: 2rem;
-  border-top: 1px solid var(--border2); border-bottom: 1px solid var(--border2);
-  padding: 8px 0; animation: reveal-up 0.9s 0.32s cubic-bezier(0.22,1,0.36,1) both; position: relative;
-}
-.ticker-wrap::before, .ticker-wrap::after { content: ''; position: absolute; top: 0; bottom: 0; width: 40px; z-index: 2; pointer-events: none; }
-.ticker-wrap::before { left: 0; background: linear-gradient(90deg, var(--cr), transparent); }
-.ticker-wrap::after { right: 0; background: linear-gradient(-90deg, var(--cr), transparent); }
-.ticker { display: flex; white-space: nowrap; animation: ticker-scroll 28s linear infinite; gap: 0; }
-.ticker-item { display: inline-flex; align-items: center; gap: 10px; padding: 0 20px; font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--mist2); letter-spacing: 0.05em; }
-.ticker-item .sep { color: var(--or); font-size: 0.7rem; }
-@keyframes ticker-scroll { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
-
-/* ── Status card ── */
-.status-card {
-  width: min(540px, 92vw); background: var(--card); backdrop-filter: blur(24px);
-  border: 1px solid var(--border); border-radius: 22px;
-  padding: 1.8rem 2rem 1.6rem; box-shadow: var(--s1);
-  margin-bottom: 1.6rem; position: relative; overflow: hidden;
-  animation: reveal-up 0.9s 0.38s cubic-bezier(0.22,1,0.36,1) both;
-}
-.status-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--or), var(--rd), var(--amber), var(--or)); background-size: 300% 100%; animation: gradient-shift 3s linear infinite; }
-@keyframes gradient-shift { 0%{background-position:0%} 100%{background-position:300%} }
-.status-card::after { content: ''; position: absolute; bottom: -40px; right: -40px; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, rgba(253,114,30,0.06), transparent 70%); pointer-events: none; }
-
-.sc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-.sc-label { font-family: 'DM Mono', monospace; font-size: 0.63rem; color: var(--or); letter-spacing: 0.12em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
-.sc-label::before { content: ''; display: inline-block; width: 16px; height: 1px; background: var(--or); }
-.sc-timestamp { font-family: 'DM Mono', monospace; font-size: 0.56rem; color: var(--mist2); letter-spacing: 0.06em; }
-.sc-message { font-size: 0.97rem; font-weight: 500; color: var(--ink); min-height: 1.5em; transition: opacity 0.3s, transform 0.3s; margin-bottom: 1.2rem; }
-.sc-message.fade-out { opacity: 0; transform: translateY(6px); }
-.sc-message.fade-in { opacity: 1; transform: translateY(0); }
-
-.prog-track { height: 4px; background: rgba(26,26,26,0.06); border-radius: 99px; overflow: hidden; margin-bottom: 8px; }
-.prog-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--or), var(--rd)); border-radius: 99px; box-shadow: 0 0 8px rgba(253,114,30,0.4); transition: width 0.5s cubic-bezier(0.4,0,0.2,1); position: relative; }
-.prog-fill::after { content: ''; position: absolute; right: -1px; top: -2px; bottom: -2px; width: 6px; background: rgba(255,255,255,0.7); border-radius: 99px; animation: prog-shine 1.2s ease-in-out infinite; }
-@keyframes prog-shine { 0%,100%{opacity:0.4;} 50%{opacity:0.9;} }
-.prog-meta { display: flex; justify-content: space-between; align-items: center; font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--mist2); }
-
-.checklist { margin-top: 1.2rem; display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--border2); padding-top: 1rem; }
-.check-item { display: flex; align-items: center; gap: 10px; font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--mist); transition: color 0.4s; }
-.check-item.done { color: var(--ink2); }
-.check-item.fail { color: var(--rd); }
-.check-icon { width: 16px; height: 16px; border-radius: 4px; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.6rem; transition: background 0.4s, border-color 0.4s; }
-.check-item.done .check-icon { background: linear-gradient(135deg, var(--or), var(--rd)); border-color: transparent; color: white; }
-.check-item.fail .check-icon { background: rgba(255,24,3,0.1); border-color: rgba(255,24,3,0.3); color: var(--rd); }
-
-/* ── Sarcasm card ── */
-.sarcasm-card {
-  width: min(540px, 92vw); background: rgba(253,114,30,0.04);
-  border: 1px dashed rgba(253,114,30,0.28); border-radius: 16px;
-  padding: 1.2rem 1.6rem; margin-bottom: 1.6rem; position: relative;
-  animation: reveal-up 0.9s 0.44s cubic-bezier(0.22,1,0.36,1) both;
-}
-.sarcasm-card::before { content: '"'; position: absolute; top: -16px; left: 20px; font-family: 'Instrument Serif', serif; font-size: 4rem; color: var(--or); line-height: 1; opacity: 0.35; }
-.sarcasm-text { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 0.97rem; color: var(--ink2); line-height: 1.65; transition: opacity 0.35s, transform 0.35s; }
-.sarcasm-text.out { opacity: 0; transform: translateX(-8px); }
-.sarcasm-text.in { opacity: 1; transform: translateX(0); }
-.sarcasm-attr { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--or); margin-top: 6px; opacity: 0.7; }
-
-/* ══════════════════════════════════════════
-   MEMORY MOSAIC GAME
-══════════════════════════════════════════ */
-.game-section {
-  width: min(560px, 92vw);
-  margin-bottom: 1.6rem;
-  animation: reveal-up 0.9s 0.48s cubic-bezier(0.22,1,0.36,1) both;
-}
-
-.game-divider {
-  display: flex; align-items: center; gap: 14px;
-  margin-bottom: 1.2rem;
-}
-.game-divider-line { flex: 1; height: 1px; background: var(--border2); }
-.game-divider-label {
-  font-family: 'DM Mono', monospace; font-size: 0.6rem;
-  color: var(--mist2); letter-spacing: 0.12em; text-transform: uppercase;
-  white-space: nowrap;
-}
-.game-divider-icon {
-  width: 28px; height: 28px; border-radius: 50%;
-  background: rgba(253,114,30,0.08); border: 1px solid rgba(253,114,30,0.2);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-
-.game-card {
-  background: var(--card); backdrop-filter: blur(24px);
-  border: 1px solid var(--border); border-radius: 22px;
-  padding: 1.6rem 1.8rem 1.4rem; box-shadow: var(--s1);
-  position: relative; overflow: hidden;
-}
-.game-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, var(--amber), var(--or), var(--rd), var(--or), var(--amber));
-  background-size: 400% 100%; animation: gradient-shift 4s linear infinite;
-}
-
-.game-header {
-  display: flex; align-items: flex-start; justify-content: space-between;
-  margin-bottom: 1.1rem; gap: 12px;
-}
-.game-title-block {}
-.game-title {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 1.15rem; font-weight: 800; letter-spacing: -0.03em;
-  color: var(--ink); line-height: 1.1; margin-bottom: 3px;
-}
-.game-title span {
-  background: linear-gradient(110deg, var(--or), var(--rd));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.game-subtitle {
-  font-family: 'DM Mono', monospace; font-size: 0.6rem;
-  color: var(--mist2); letter-spacing: 0.06em;
-}
-
-.game-stats {
-  display: flex; gap: 8px; flex-shrink: 0;
-}
-.g-stat {
-  background: rgba(253,114,30,0.06); border: 1px solid rgba(253,114,30,0.14);
-  border-radius: 10px; padding: 6px 10px; text-align: center; min-width: 52px;
-}
-.g-stat-val {
-  font-family: 'DM Mono', monospace; font-size: 0.95rem; font-weight: 500;
-  color: var(--ink); display: block; line-height: 1;
-}
-.g-stat-val.timer-danger { color: var(--rd); animation: pulse-red 0.5s ease-in-out infinite; }
-@keyframes pulse-red { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
-.g-stat-label {
-  font-family: 'DM Mono', monospace; font-size: 0.5rem;
-  color: var(--mist2); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px;
-}
-
-/* Progress bar inside game */
-.game-prog-wrap { margin-bottom: 1rem; }
-.game-prog-track { height: 3px; background: rgba(26,26,26,0.06); border-radius: 99px; overflow: hidden; }
-.game-prog-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--amber), var(--or), var(--rd)); border-radius: 99px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
-.game-prog-label { font-family: 'DM Mono', monospace; font-size: 0.54rem; color: var(--mist2); margin-top: 5px; display: flex; justify-content: space-between; }
-
-/* Tile grid */
-.game-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px;
-  margin-bottom: 1rem;
-}
-
-.tile { aspect-ratio: 0.82; cursor: pointer; perspective: 700px; position: relative; }
-.tile-inner {
-  width: 100%; height: 100%;
-  transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
-  transform-style: preserve-3d; position: relative;
-}
-.tile.flipped .tile-inner,
-.tile.matched .tile-inner { transform: rotateY(180deg); }
-.tile-back, .tile-front {
-  position: absolute; inset: 0; backface-visibility: hidden;
-  border-radius: 4px; overflow: hidden;
-}
-.tile-back {
-  background: rgba(253,114,30,0.04); border: 1px solid rgba(253,114,30,0.14);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-  transition: background 0.2s, border-color 0.2s;
-}
-.tile-back:hover { background: rgba(253,114,30,0.08); border-color: rgba(253,114,30,0.28); }
-.tile-back svg { opacity: 0.35; width: 26px; height: 26px; }
-.tile-back span { font-family: 'DM Mono', monospace; font-size: 0.44rem; color: var(--mist2); letter-spacing: 0.05em; }
-
-.tile-front {
-  transform: rotateY(180deg); background: white;
-  display: flex; flex-direction: column;
-  border: 1px solid rgba(253,114,30,0.18);
-}
-.tile-front .ti-img {
-  flex: 1; display: flex; align-items: center; justify-content: center;
-  background: #FFF5F0; border-bottom: 1px solid rgba(253,114,30,0.08);
-}
-.tile-front .ti-cap {
-  padding: 4px 3px; text-align: center;
-  font-family: 'DM Mono', monospace; font-size: 0.42rem; color: #bbb; line-height: 1.3;
-}
-
-.tile.matched .tile-front {
-  border-color: var(--or);
-  box-shadow: inset 0 0 0 1.5px rgba(253,114,30,0.35);
-}
-.tile.matched .tile-front .ti-img { background: #FFF0E6; }
-
-.tile.wrong .tile-inner { animation: tile-shake 0.38s ease; }
-@keyframes tile-shake {
-  0%,100%{transform:rotateY(180deg);}
-  20%{transform:rotateY(180deg) translateX(-5px);}
-  40%{transform:rotateY(180deg) translateX(5px);}
-  60%{transform:rotateY(180deg) translateX(-3px);}
-  80%{transform:rotateY(180deg) translateX(2px);}
-}
-.tile.matched .tile-inner { animation: tile-match-pop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
-@keyframes tile-match-pop {
-  0%{transform:rotateY(180deg) scale(1);}
-  50%{transform:rotateY(180deg) scale(1.08);}
-  100%{transform:rotateY(180deg) scale(1);}
-}
-
-/* Game toast bar */
-.game-toast {
-  font-family: 'DM Mono', monospace; font-size: 0.62rem;
-  color: var(--mist2); font-style: italic; text-align: center;
-  min-height: 1.4em; transition: color 0.3s, opacity 0.3s;
-  padding-top: 2px;
-}
-.game-toast.match { color: var(--or); }
-.game-toast.wrong { color: rgba(255,24,3,0.7); }
-
-/* Win / Timeout overlay */
-.game-result {
-  display: none; flex-direction: column; align-items: center;
-  text-align: center; padding: 0.8rem 0 0.4rem; gap: 10px;
-}
-.game-result.show { display: flex; }
-
-.result-badge {
-  width: 64px; height: 64px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 2px; flex-shrink: 0;
-}
-.result-badge.win { background: linear-gradient(135deg, var(--or), var(--rd)); }
-.result-badge.lose { background: rgba(255,24,3,0.12); border: 1.5px solid rgba(255,24,3,0.3); }
-
-.result-title {
-  font-family: 'Instrument Serif', serif; font-size: 1.5rem;
-  font-style: italic; color: var(--ink); line-height: 1.1;
-}
-.result-title .accent {
-  background: linear-gradient(110deg, var(--or), var(--rd));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  font-family: 'Bricolage Grotesque', sans-serif; font-style: normal; font-weight: 800;
-}
-.result-sub {
-  font-family: 'DM Mono', monospace; font-size: 0.66rem;
-  color: var(--mist); max-width: 360px; line-height: 1.7;
-}
-
-.result-stats { display: flex; gap: 10px; }
-.result-stat {
-  background: rgba(253,114,30,0.06); border: 1px solid rgba(253,114,30,0.14);
-  border-radius: 12px; padding: 10px 16px; text-align: center;
-}
-.result-stat b { display: block; font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
-.result-stat span { font-family: 'DM Mono', monospace; font-size: 0.55rem; color: var(--mist2); letter-spacing: 0.08em; text-transform: uppercase; }
-
-.result-btn {
-  padding: 11px 28px; border-radius: 999px; border: none;
-  background: linear-gradient(135deg, var(--or), var(--rd));
-  color: white; font-family: 'DM Mono', monospace;
-  font-size: 0.72rem; font-weight: 500; cursor: none;
-  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
-  box-shadow: 0 4px 20px rgba(253,114,30,0.30);
-  letter-spacing: 0.04em;
-}
-.result-btn:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 8px 32px rgba(253,114,30,0.42); }
-
-/* ── CTA area ── */
-.cta-wrap {
-  display: flex; flex-direction: column; align-items: center; gap: 0.9rem;
-  animation: reveal-up 0.9s 0.56s cubic-bezier(0.22,1,0.36,1) both;
-}
-.cta-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: center; }
-
-.btn-primary {
-  position: relative; padding: 14px 36px; border-radius: 999px; border: none;
-  background: linear-gradient(135deg, var(--or) 0%, var(--rd) 100%);
-  color: #fff; font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 0.97rem; font-weight: 700; cursor: none; outline: none; overflow: hidden;
-  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
-  box-shadow: 0 4px 24px rgba(253,114,30,0.38), 0 1px 4px rgba(26,26,26,0.1);
-  letter-spacing: -0.01em;
-}
-.btn-primary:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 40px rgba(253,114,30,0.52), 0 2px 8px rgba(26,26,26,0.12); }
-.btn-primary:active { transform: scale(0.96); }
-.btn-primary .btn-shine { position: absolute; top: 0; left: -80%; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent); transform: skewX(-15deg); }
-.btn-primary:hover .btn-shine { animation: shine 0.5s ease; }
-@keyframes shine { from{left:-80%;} to{left:140%;} }
-
-.btn-ghost {
-  padding: 13px 24px; border-radius: 999px; border: 1px solid var(--border2);
-  background: transparent; color: var(--mist);
-  font-family: 'DM Mono', monospace; font-size: 0.72rem;
-  cursor: none; transition: border-color 0.2s, color 0.2s, transform 0.2s; letter-spacing: 0.02em;
-}
-.btn-ghost:hover { border-color: var(--or); color: var(--or); transform: translateY(-2px); }
-
-.cta-note { font-family: 'DM Mono', monospace; font-size: 0.63rem; color: var(--mist2); text-align: center; max-width: 340px; font-style: italic; }
-
-/* ── Diagnostic grid ── */
-.diag-grid {
-  width: min(540px, 92vw); display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-  margin-bottom: 1.6rem;
-  animation: reveal-up 0.9s 0.62s cubic-bezier(0.22,1,0.36,1) both;
-}
-.diag-cell { background: var(--card); border: 1px solid var(--border2); border-radius: 14px; padding: 14px 12px; text-align: center; transition: border-color 0.2s, transform 0.2s; }
-.diag-cell:hover { border-color: var(--border); transform: translateY(-2px); }
-.diag-val { font-family: 'DM Mono', monospace; font-size: 1.05rem; font-weight: 700; color: var(--ink2); display: block; margin-bottom: 4px; }
-.diag-val.bad { color: var(--rd); }
-.diag-val.ok { background: linear-gradient(110deg,var(--or),var(--rd)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.diag-name { font-family: 'DM Mono', monospace; font-size: 0.56rem; color: var(--mist2); letter-spacing: 0.08em; text-transform: uppercase; }
-
-/* ── Dot grids ── */
-.dots { position: fixed; z-index: 0; pointer-events: none; display: grid; grid-template-columns: repeat(6,1fr); gap: 24px; opacity: 0.22; }
-.dots.tl { top: 8%; left: 6%; }
-.dots.br { bottom: 12%; right: 6%; }
-.dots span { width: 3px; height: 3px; border-radius: 50%; background: rgba(253,114,30,0.55); display: block; }
-
-/* ── Footer ── */
-footer {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 2rem; background: rgba(253,250,247,0.88); backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border2);
-}
-.footer-logo { display: flex; align-items: center; gap: 8px; cursor: none; }
-.footer-logo-icon { width: 24px; height: 24px; }
-.footer-wm { display: flex; align-items: baseline; gap: 1px; font-size: 0.88rem; font-weight: 800; letter-spacing: -0.03em; }
-.footer-wm-m { color: var(--ink2); }
-.footer-wm-p { background: linear-gradient(110deg,var(--or),var(--rd)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.footer-tagline { font-family: 'DM Mono', monospace; font-size: 0.57rem; color: var(--mist2); letter-spacing: 0.03em; }
-.footer-links { display: flex; gap: 1.4rem; }
-.footer-links a { font-family: 'DM Mono', monospace; font-size: 0.64rem; color: var(--mist2); text-decoration: none; transition: color 0.18s; }
-.footer-links a:hover { color: var(--or); }
+.flash-overlay.flash{opacity:1;transition:opacity 0s;}
 
 /* ── Toast ── */
-#toast {
-  position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: var(--ink); color: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 999px;
-  font-family: 'DM Mono', monospace; font-size: 0.7rem; white-space: nowrap;
-  opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 999; pointer-events: none;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+#toast{
+  position:fixed;bottom:68px;left:50%;
+  transform:translateX(-50%) translateY(14px);
+  background:var(--ink);color:rgba(255,255,255,.9);
+  padding:9px 20px;border-radius:999px;
+  font-family:'DM Mono',monospace;font-size:.68rem;
+  white-space:nowrap;opacity:0;
+  transition:opacity .3s,transform .3s;
+  z-index:999;pointer-events:none;
+  box-shadow:0 4px 20px rgba(0,0,0,.16);
 }
-#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* ── Reveal / flash ── */
-@keyframes reveal-up { from{opacity:0;transform:translateY(28px);} to{opacity:1;transform:translateY(0);} }
-.flash-overlay { position: fixed; inset: 0; z-index: 9990; background: white; pointer-events: none; opacity: 0; transition: opacity 0.08s; }
-.flash-overlay.flash { opacity: 1; transition: opacity 0s; }
+/* ── Page structure ── */
+.page{
+  position:relative;z-index:1;
+  height:100dvh;
+  display:flex;flex-direction:column;
+}
 
-/* ── Responsive ── */
-@media (max-width: 540px) {
-  .footer-tagline, .footer-links { display: none; }
-  .pol:nth-child(n+5) { display: none; }
-  .diag-grid { gap: 7px; }
-  .diag-cell { padding: 10px 8px; }
-  .diag-val { font-size: 0.9rem; }
-  .grain-strip { display: none; }
-  .game-grid { gap: 7px; }
-  .game-stats { gap: 6px; }
-  .g-stat { padding: 5px 8px; min-width: 44px; }
+/* ── Nav ── */
+.nav{
+  flex-shrink:0;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;
+  border-bottom:1px solid var(--border2);
+  background:rgba(253,250,247,.82);
+  backdrop-filter:blur(20px);
+}
+
+.logo{display:flex;align-items:center;gap:12px;cursor:none;}
+.logo-orbit{position:relative;width:38px;height:38px;}
+.orbit-ring{position:absolute;inset:0;border-radius:50%;}
+.orbit-ring.outer{
+  border:1px dashed rgba(253,114,30,.32);
+  animation:spin-cw 22s linear infinite;inset:-7px;
+}
+.orbit-ring.outer::before{
+  content:'';position:absolute;width:5px;height:5px;border-radius:50%;
+  background:var(--or);top:-2.5px;left:50%;transform:translateX(-50%);
+  box-shadow:0 0 9px 3px rgba(253,114,30,.6);
+  animation:orb-pulse 2s ease-in-out infinite;
+}
+@keyframes orb-pulse{0%,100%{box-shadow:0 0 6px 2px rgba(253,114,30,.45);}50%{box-shadow:0 0 14px 4px rgba(253,114,30,.75);}}
+.orbit-ring.inner{border:1px solid rgba(253,114,30,.1);animation:spin-ccw 16s linear infinite;inset:-2px;}
+@keyframes spin-cw{to{transform:rotate(360deg);}}
+@keyframes spin-ccw{to{transform:rotate(-360deg);}}
+
+.logo-btn{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--card);backdrop-filter:blur(20px);
+  border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--s1),0 0 28px rgba(253,114,30,.12);
+  cursor:none;overflow:hidden;position:relative;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;
+  animation:logo-pulse 4s ease-in-out infinite;
+}
+.logo-btn::before{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.4),transparent 60%);
+  pointer-events:none;
+}
+.logo-btn:hover{transform:scale(1.1) rotate(-4deg);box-shadow:var(--s1),0 0 48px rgba(253,114,30,.30);}
+@keyframes logo-pulse{0%,100%{box-shadow:var(--s1),0 0 22px rgba(253,114,30,.1);}50%{box-shadow:var(--s1),0 0 44px rgba(253,114,30,.24);}}
+
+.logo-svg{width:26px;height:26px;}
+.logo-pupil{animation:blink 5.5s ease-in-out infinite;transform-origin:center;}
+@keyframes blink{0%,85%,100%{transform:scaleY(1);}91%{transform:scaleY(.04);}93%{transform:scaleY(1);}95%{transform:scaleY(.04);}}
+
+.wordmark{display:flex;align-items:baseline;gap:1px;font-size:1.05rem;font-weight:800;letter-spacing:-.04em;line-height:1;}
+.wm-m{color:var(--ink2);}
+.wm-p{background:linear-gradient(110deg,var(--or) 0%,var(--rd) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* Status pill in nav */
+.status-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:5px 14px 5px 10px;border-radius:999px;
+  background:rgba(253,114,30,.06);
+  border:1px solid rgba(253,114,30,.22);
+}
+.status-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--or);
+  box-shadow:0 0 7px 2px rgba(253,114,30,.52);
+  animation:dot-blink 1.8s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes dot-blink{0%,100%{opacity:1;}50%{opacity:.1;}}
+.status-text{
+  font-family:'DM Mono',monospace;font-size:.59rem;
+  color:var(--or);letter-spacing:.1em;text-transform:uppercase;
+  transition:opacity .25s;
+}
+.status-text.fade{opacity:0;}
+
+/* ── Main 2-col layout ── */
+.main{
+  flex:1;min-height:0;
+  display:flex;align-items:stretch;
+}
+
+/* ── Left panel ── */
+.left{
+  flex:0 0 43%;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:2rem 2.5rem 2rem 2.5rem;
+  gap:0;
+}
+
+/* Headline */
+.headline{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(1.9rem,3.2vw,2.65rem);
+  font-weight:400;font-style:italic;
+  color:var(--ink);line-height:1.13;letter-spacing:-.02em;
+  margin-bottom:.45rem;
+  animation:slide-up .7s cubic-bezier(.22,1,.36,1) both;
+}
+.hl-bold{font-family:'Bricolage Grotesque',sans-serif;font-style:normal;font-weight:800;}
+.hl-accent{
+  background:linear-gradient(105deg,var(--or) 0%,var(--rd) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  position:relative;
+}
+.hl-accent::after{
+  content:'';position:absolute;bottom:-3px;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--or),var(--rd));border-radius:99px;
+  animation:ul-pulse 2s ease-in-out infinite;
+}
+@keyframes ul-pulse{0%,100%{opacity:.4;transform:scaleX(.93);}50%{opacity:1;transform:scaleX(1);}}
+
+/* Sub-line */
+.sub-line{
+  font-size:.86rem;color:var(--mist);line-height:1.65;
+  margin-bottom:1.4rem;
+  animation:slide-up .7s .07s cubic-bezier(.22,1,.36,1) both;
+}
+
+/* Rotating quote card */
+.quote-card{
+  background:rgba(253,114,30,.04);
+  border:1px dashed rgba(253,114,30,.26);border-radius:14px;
+  padding:.95rem 1.15rem .9rem;margin-bottom:1.5rem;
+  position:relative;overflow:hidden;min-height:80px;
+  animation:slide-up .7s .13s cubic-bezier(.22,1,.36,1) both;
+}
+.quote-card::before{
+  content:'"';position:absolute;top:-10px;left:12px;
+  font-family:'Instrument Serif',serif;font-size:3.8rem;
+  color:var(--or);line-height:1;opacity:.28;pointer-events:none;
+}
+.quote-text{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:.875rem;color:var(--ink2);line-height:1.65;
+  transition:opacity .3s,transform .3s;
+}
+.quote-text.out{opacity:0;transform:translateY(7px);}
+.quote-text.in{opacity:1;transform:translateY(0);}
+.quote-attr{
+  font-family:'DM Mono',monospace;font-size:.57rem;
+  color:var(--or);margin-top:5px;opacity:.65;
+  transition:opacity .3s;
+}
+.quote-attr.fade{opacity:0;}
+
+/* CTA group */
+.cta-group{
+  display:flex;flex-direction:column;gap:.55rem;
+  animation:slide-up .7s .2s cubic-bezier(.22,1,.36,1) both;
+}
+.cta-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+
+.btn-primary{
+  position:relative;padding:11px 26px;border-radius:999px;border:none;
+  background:linear-gradient(135deg,var(--or) 0%,var(--rd) 100%);
+  color:#fff;font-family:'Bricolage Grotesque',sans-serif;
+  font-size:.88rem;font-weight:700;cursor:none;outline:none;overflow:hidden;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
+  box-shadow:0 4px 22px rgba(253,114,30,.38);letter-spacing:-.01em;white-space:nowrap;
+}
+.btn-primary:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 8px 38px rgba(253,114,30,.52);}
+.btn-primary:active{transform:scale(.96);}
+.btn-shine{
+  position:absolute;top:0;left:-80%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);
+  transform:skewX(-15deg);
+}
+.btn-primary:hover .btn-shine{animation:shine .5s ease;}
+@keyframes shine{from{left:-80%;}to{left:140%;}}
+
+.btn-ghost{
+  padding:10px 18px;border-radius:999px;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--mist);font-family:'DM Mono',monospace;font-size:.66rem;
+  cursor:none;transition:border-color .2s,color .2s,transform .2s;
+  letter-spacing:.01em;white-space:nowrap;
+}
+.btn-ghost:hover{border-color:var(--or);color:var(--or);transform:translateY(-2px);}
+
+.cta-note{
+  font-family:'DM Mono',monospace;font-size:.58rem;
+  color:var(--mist2);font-style:italic;
+  transition:opacity .3s;min-height:1em;
+}
+
+/* ── Vertical divider ── */
+.vdivider{
+  flex-shrink:0;width:1px;
+  background:linear-gradient(180deg,transparent,var(--border2) 20%,var(--border2) 80%,transparent);
+  margin:1.5rem 0;
+}
+
+/* ── Right panel — Game ── */
+.right{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:1.2rem 2rem 1.2rem 1.5rem;
+}
+
+.game-card{
+  width:100%;
+  max-width:334px;
+  height:100%;
+  max-height:min(580px,calc(100dvh - 58px - 2.4rem));
+  background:var(--card);
+  backdrop-filter:blur(24px);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:1.3rem 1.4rem 1.1rem;
+  box-shadow:var(--s1);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+  animation:slide-up .7s .24s cubic-bezier(.22,1,.36,1) both;
+}
+.game-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--amber),var(--or),var(--rd),var(--or),var(--amber));
+  background-size:400% 100%;animation:grad-shift 4s linear infinite;
+}
+@keyframes grad-shift{0%{background-position:0%}100%{background-position:300%}}
+
+/* Game header */
+.game-header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:.75rem;gap:10px;flex-shrink:0;
+}
+.game-title{font-size:.97rem;font-weight:800;letter-spacing:-.03em;color:var(--ink);line-height:1.1;}
+.game-title span{
+  background:linear-gradient(110deg,var(--or),var(--rd));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.game-subtitle{font-family:'DM Mono',monospace;font-size:.53rem;color:var(--mist2);letter-spacing:.04em;margin-top:2px;}
+
+.game-stats{display:flex;gap:5px;flex-shrink:0;}
+.g-stat{
+  background:rgba(253,114,30,.06);border:1px solid rgba(253,114,30,.14);
+  border-radius:8px;padding:4px 8px;text-align:center;min-width:42px;
+}
+.g-stat-val{
+  font-family:'DM Mono',monospace;font-size:.84rem;font-weight:500;
+  color:var(--ink);display:block;line-height:1;
+}
+.g-stat-val.danger{color:var(--rd);animation:pulse-red .5s ease-in-out infinite;}
+@keyframes pulse-red{0%,100%{opacity:1;}50%{opacity:.45;}}
+.g-stat-label{font-family:'DM Mono',monospace;font-size:.44rem;color:var(--mist2);letter-spacing:.06em;text-transform:uppercase;margin-top:1px;}
+
+/* Game progress */
+.g-prog-wrap{flex-shrink:0;margin-bottom:.65rem;}
+.g-prog-track{height:3px;background:rgba(26,26,26,.06);border-radius:99px;overflow:hidden;}
+.g-prog-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--amber),var(--or),var(--rd));
+  border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1);
+}
+.g-prog-labels{
+  font-family:'DM Mono',monospace;font-size:.5rem;
+  color:var(--mist2);margin-top:4px;
+  display:flex;justify-content:space-between;
+}
+
+/* Tile grid */
+.game-grid{
+  flex:1;min-height:0;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-template-rows:repeat(4,1fr);
+  gap:6px;
+  margin-bottom:.55rem;
+}
+
+.tile{cursor:none;perspective:700px;position:relative;}
+.tile-inner{
+  width:100%;height:100%;
+  transition:transform .44s cubic-bezier(.4,0,.2,1);
+  transform-style:preserve-3d;position:relative;
+}
+.tile.flipped .tile-inner,.tile.matched .tile-inner{transform:rotateY(180deg);}
+
+.tile-back,.tile-front{
+  position:absolute;inset:0;backface-visibility:hidden;
+  border-radius:7px;overflow:hidden;
+}
+.tile-back{
+  background:rgba(253,114,30,.04);
+  border:1px solid rgba(253,114,30,.14);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  transition:background .2s,border-color .2s;
+}
+.tile-back:hover{background:rgba(253,114,30,.09);border-color:rgba(253,114,30,.3);}
+.tile-back svg{opacity:.32;width:18px;height:18px;}
+.tile-back span{font-family:'DM Mono',monospace;font-size:.35rem;color:var(--mist2);letter-spacing:.04em;}
+
+.tile-front{
+  transform:rotateY(180deg);background:white;
+  display:flex;flex-direction:column;
+  border:1px solid rgba(253,114,30,.18);
+}
+.ti-img{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  background:#FFF5F0;border-bottom:1px solid rgba(253,114,30,.08);
+}
+.ti-img svg{width:68%;height:68%;}
+.ti-cap{
+  padding:2px 2px;text-align:center;
+  font-family:'DM Mono',monospace;font-size:.32rem;color:#c5c5c5;
+  line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+.tile.matched .tile-front{border-color:var(--or);box-shadow:inset 0 0 0 1.5px rgba(253,114,30,.32);}
+.tile.matched .tile-front .ti-img{background:#FFF0E6;}
+.tile.wrong .tile-inner{animation:tile-shake .38s ease;}
+@keyframes tile-shake{0%,100%{transform:rotateY(180deg);}20%{transform:rotateY(180deg) translateX(-5px);}40%{transform:rotateY(180deg) translateX(5px);}60%{transform:rotateY(180deg) translateX(-3px);}80%{transform:rotateY(180deg) translateX(2px);}}
+.tile.matched .tile-inner{animation:tile-pop .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes tile-pop{0%{transform:rotateY(180deg) scale(1);}50%{transform:rotateY(180deg) scale(1.1);}100%{transform:rotateY(180deg) scale(1);}}
+
+/* Game toast */
+.game-toast{
+  font-family:'DM Mono',monospace;font-size:.56rem;
+  color:var(--mist2);font-style:italic;text-align:center;
+  min-height:1.35em;flex-shrink:0;transition:color .3s;
+}
+.game-toast.match{color:var(--or);}
+.game-toast.wrong{color:rgba(255,24,3,.65);}
+
+/* Result screen */
+.game-result{
+  display:none;flex-direction:column;align-items:center;
+  text-align:center;justify-content:center;
+  gap:9px;flex:1;padding:.4rem 0;
+}
+.game-result.show{display:flex;}
+.result-badge{
+  width:50px;height:50px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.result-badge.win{background:linear-gradient(135deg,var(--or),var(--rd));}
+.result-badge.lose{background:rgba(255,24,3,.1);border:1.5px solid rgba(255,24,3,.28);}
+.result-title{font-family:'Instrument Serif',serif;font-size:1.3rem;font-style:italic;color:var(--ink);line-height:1.1;}
+.result-title .accent{
+  background:linear-gradient(110deg,var(--or),var(--rd));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  font-family:'Bricolage Grotesque',sans-serif;font-style:normal;font-weight:800;
+}
+.result-sub{font-family:'DM Mono',monospace;font-size:.59rem;color:var(--mist);max-width:272px;line-height:1.6;}
+.result-stats{display:flex;gap:7px;}
+.result-stat{
+  background:rgba(253,114,30,.06);border:1px solid rgba(253,114,30,.14);
+  border-radius:10px;padding:7px 12px;text-align:center;
+}
+.result-stat b{display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:1.05rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+.result-stat span{font-family:'DM Mono',monospace;font-size:.48rem;color:var(--mist2);letter-spacing:.06em;text-transform:uppercase;}
+.result-btn{
+  padding:8px 22px;border-radius:999px;border:none;
+  background:linear-gradient(135deg,var(--or),var(--rd));
+  color:white;font-family:'DM Mono',monospace;
+  font-size:.63rem;font-weight:500;cursor:none;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
+  box-shadow:0 4px 16px rgba(253,114,30,.28);letter-spacing:.03em;
+}
+.result-btn:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 8px 26px rgba(253,114,30,.42);}
+
+/* Reveal animation */
+@keyframes slide-up{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* Mobile: stack vertically, allow scroll */
+@media(max-width:760px){
+  html,body{height:auto;overflow:auto;}
+  .page{height:auto;min-height:100dvh;}
+  .main{flex-direction:column;height:auto;}
+  .vdivider{display:none;}
+  .left{flex:none;padding:1.4rem 1.5rem 0;}
+  .right{padding:1rem 1.5rem 5.5rem;}
+  .game-card{max-height:none;height:auto;min-height:380px;}
+  .game-grid{min-height:260px;}
+  .headline{font-size:clamp(1.7rem,7vw,2.3rem);}
 }
 </style>
 </head>
@@ -583,399 +468,372 @@ footer {
 <div id="cursor-ring"></div>
 <div class="flash-overlay" id="flash"></div>
 <div id="toast"></div>
+<div class="bg"></div>
 
-<div class="grain-strip l"></div>
-<div class="grain-strip r"></div>
-<div class="blade-field" id="blade-field"></div>
+<div class="page">
 
-<!-- Floating polaroids -->
-<div class="pol-field">
-  <div class="pol" onclick="shutterClick(this)">
-    <div class="pol-img">
-      <svg width="96" height="96" viewBox="0 0 96 96" fill="none"><rect width="96" height="96" fill="#FFF2E8"/><rect x="14" y="20" width="68" height="52" rx="3" fill="#FFE0C8" opacity=".6"/><ellipse cx="48" cy="46" rx="18" ry="17" fill="#FD721E" opacity=".12"/><ellipse cx="48" cy="46" rx="11" ry="10" fill="#FD721E" opacity=".3"/><ellipse cx="48" cy="46" rx="5" ry="5" fill="#FF1803" opacity=".5"/><rect x="14" y="20" width="68" height="9" rx="3" fill="#FFD0B0"/><circle cx="22" cy="24" r="2.5" fill="#FD721E" opacity=".5"/><rect x="64" y="22" width="13" height="4" rx="2" fill="#FD721E" opacity=".3"/></svg>
+  <!-- ── NAV ── -->
+  <nav class="nav">
+    <div class="logo" onclick="triggerEgg()">
+      <div class="logo-orbit">
+        <div class="orbit-ring outer"></div>
+        <div class="orbit-ring inner"></div>
+        <div class="logo-btn">
+          <svg class="logo-svg" viewBox="0 0 370 369" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M44.5686 302.84C26.8419 281.804 14.0576 257.061 7.1564 230.431C0.255244 203.802 -0.587105 175.964 4.69133 148.966L43.1657 156.488C39.0119 177.734 39.6748 199.641 45.1056 220.597C50.5364 241.552 60.5969 261.024 74.5467 277.578L44.5686 302.84Z" fill="url(#gn)"/>
+            <path d="M12.2373 121.703C21.5917 95.8331 36.6278 72.39 56.239 53.0987C75.8502 33.8074 99.5374 19.1589 125.558 10.2312L138.28 47.3121C117.804 54.3376 99.1635 65.8652 83.7307 81.0463C68.2978 96.2274 56.4653 114.676 49.1039 135.034L12.2373 121.703Z" fill="url(#gn)"/>
+            <path d="M152.941 3.13459C180.022 -1.69915 207.843 -0.399101 234.355 6.93904C260.867 14.2772 285.397 27.4666 306.138 45.5369L280.387 75.0956C264.064 60.8754 244.761 50.496 223.897 44.7213C203.034 38.9467 181.141 37.9236 159.83 41.7275L152.941 3.13459Z" fill="url(#gn)"/>
+            <path d="M325.976 65.7035C343.703 86.7395 356.487 111.483 363.388 138.112C370.289 164.742 371.132 192.579 365.853 219.577L327.379 212.055C331.533 190.809 330.87 168.903 325.439 147.947C320.008 126.991 309.948 107.52 295.998 90.9655L325.976 65.7035Z" fill="url(#gn)"/>
+            <path d="M358.307 246.841C348.953 272.71 333.917 296.154 314.306 315.445C294.695 334.736 271.007 349.385 244.987 358.312L232.264 321.231C252.741 314.206 271.381 302.678 286.814 287.497C302.247 272.316 314.079 253.868 321.441 233.51L358.307 246.841Z" fill="url(#gn)"/>
+            <path d="M217.604 365.409C190.523 370.243 162.702 368.943 136.19 361.605C109.677 354.266 85.1479 341.077 64.4062 323.007L90.1578 293.448C106.48 307.668 125.784 318.048 146.647 323.822C167.511 329.597 189.404 330.62 210.715 326.816L217.604 365.409Z" fill="url(#gn)"/>
+            <circle cx="185.5" cy="183.5" r="127.5" fill="#D2D3D7"/>
+            <circle cx="185.5" cy="183.5" r="101.121" fill="#515151"/>
+            <circle cx="185.5" cy="183.5" r="92.3276" fill="#3D3D3D"/>
+            <circle class="logo-pupil" cx="184.621" cy="182.62" r="38.6897" fill="#050601"/>
+            <path d="M131.895 194.876C129.97 195.471 127.915 194.396 127.451 192.436C124.732 180.945 125.855 168.874 130.648 158.083C131.465 156.242 133.684 155.564 135.465 156.504C137.247 157.443 137.915 159.645 137.117 161.494C133.203 170.562 132.265 180.642 134.438 190.276C134.882 192.241 133.819 194.281 131.895 194.876Z" fill="#F6F6F6"/>
+            <path d="M111.553 206.404C110.937 206.594 110.282 206.249 110.101 205.63C106.725 194.097 106.094 181.927 108.266 170.096C110.508 157.883 115.671 146.392 123.314 136.605C130.958 126.818 140.855 119.025 152.162 113.891C163.114 108.917 175.074 106.581 187.081 107.062C187.726 107.088 188.22 107.64 188.184 108.284C188.148 108.928 187.597 109.42 186.953 109.395C175.321 108.935 163.737 111.2 153.128 116.018C142.164 120.997 132.567 128.553 125.156 138.043C117.744 147.533 112.738 158.675 110.564 170.518C108.46 181.978 109.068 193.766 112.333 204.94C112.514 205.559 112.17 206.213 111.553 206.404Z" fill="#F6F6F6"/>
+            <path d="M138.677 151.071C137.068 149.944 136.668 147.717 137.898 146.185C145.33 136.931 155.61 130.381 167.138 127.554C169.046 127.086 170.895 128.39 171.236 130.324C171.578 132.259 170.281 134.091 168.378 134.578C158.704 137.053 150.07 142.555 143.74 150.277C142.495 151.796 140.287 152.198 138.677 151.071Z" fill="#F6F6F6"/>
+            <ellipse cx="208.5" cy="224" rx="3.5" ry="4" fill="#F6F6F6"/>
+            <defs>
+              <linearGradient id="gn" x1="242.83" y1="70.146" x2="53.96" y2="254.022" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#FD721E"/><stop offset="1" stop-color="#FF1803"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+      <div class="wordmark"><span class="wm-m">Moment</span><span class="wm-p">Pik</span></div>
     </div>
-    <div class="pol-caption">server_room_vibes.raw<br>404 smiles found</div>
-  </div>
-  <div class="pol" onclick="shutterClick(this)">
-    <div class="pol-img">
-      <svg width="96" height="96" viewBox="0 0 96 96" fill="none"><rect width="96" height="96" fill="#FFF8F4"/><ellipse cx="48" cy="54" rx="28" ry="22" fill="#FFCFB0" opacity=".4"/><ellipse cx="48" cy="38" rx="16" ry="16" fill="#FD721E" opacity=".22"/><ellipse cx="48" cy="36" rx="9" ry="9" fill="#FF1803" opacity=".38"/><path d="M33 60 Q48 74 63 60" stroke="#FD721E" stroke-width="2.5" fill="none" opacity=".38" stroke-linecap="round"/></svg>
+
+    <div class="status-pill">
+      <div class="status-dot"></div>
+      <span class="status-text" id="status-text">Scheduled Chaos · ETA: Soon™</span>
     </div>
-    <div class="pol-caption">team_debugging.jpg<br>confidence: 404</div>
-  </div>
-  <div class="pol" onclick="shutterClick(this)">
-    <div class="pol-img">
-      <svg width="96" height="96" viewBox="0 0 96 96" fill="none"><rect width="96" height="96" fill="#FFF4EF"/><rect x="12" y="28" width="72" height="42" rx="4" fill="#FD721E" opacity=".07"/><rect x="12" y="28" width="72" height="42" rx="4" stroke="#FD721E" stroke-width="1" fill="none" opacity=".22"/><polygon points="18,70 38,36 58,70" fill="#FD721E" opacity=".22"/><polygon points="38,70 58,46 78,70" fill="#FF1803" opacity=".15"/><circle cx="22" cy="36" r="6" fill="#FD721E" opacity=".3"/></svg>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- LEFT -->
+    <div class="left">
+      <h1 class="headline">
+        We're <span class="hl-bold hl-accent">technically</span><br>
+        still <em>existing</em> —<br>
+        <span class="hl-bold">barely.</span>
+      </h1>
+
+      <p class="sub-line">Your memories are safe. Our dignity is under reconstruction.</p>
+
+      <div class="quote-card">
+        <div class="quote-text in" id="quote-text">Have you tried closing the browser and reopening it? Our engineers did. To the servers. Twelve times.</div>
+        <div class="quote-attr" id="quote-attr">— The Dev Team, 9:47am, still in pajamas</div>
+      </div>
+
+      <div class="cta-group">
+        <div class="cta-row">
+          <button class="btn-primary" onclick="handleRetry()">
+            <div class="btn-shine"></div>
+            <span id="btn-label">Give it another shot 📸</span>
+          </button>
+          <button class="btn-ghost" onclick="handleNotify()">Notify me when alive</button>
+        </div>
+        <p class="cta-note" id="cta-note">Clicking this button is a valid form of emotional processing.</p>
+      </div>
     </div>
-    <div class="pol-caption">uptime_chart.png<br>very optimistic</div>
-  </div>
-  <div class="pol" onclick="shutterClick(this)">
-    <div class="pol-img">
-      <svg width="96" height="96" viewBox="0 0 96 96" fill="none"><rect width="96" height="96" fill="#FFF0EA"/><path d="M20 70 Q36 38 48 52 Q60 66 76 28" stroke="#FF1803" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".42"/><circle cx="20" cy="70" r="3.5" fill="#FF1803" opacity=".42"/><circle cx="76" cy="28" r="3.5" fill="#FD721E" opacity=".42"/><text x="48" y="22" text-anchor="middle" font-family="serif" font-size="14" fill="#FF1803" opacity=".28">♥</text></svg>
+
+    <!-- DIVIDER -->
+    <div class="vdivider"></div>
+
+    <!-- RIGHT — Game -->
+    <div class="right">
+      <div class="game-card">
+
+        <div class="game-header">
+          <div>
+            <div class="game-title">Memory <span>Mosaic</span></div>
+            <div class="game-subtitle">match photo memories before time runs out</div>
+          </div>
+          <div class="game-stats">
+            <div class="g-stat">
+              <span class="g-stat-val" id="g-timer">60</span>
+              <div class="g-stat-label">secs</div>
+            </div>
+            <div class="g-stat">
+              <span class="g-stat-val" id="g-moves">0</span>
+              <div class="g-stat-label">moves</div>
+            </div>
+            <div class="g-stat">
+              <span class="g-stat-val" id="g-pairs">0<span style="font-size:.52rem;opacity:.38">/8</span></span>
+              <div class="g-stat-label">pairs</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="g-prog-wrap">
+          <div class="g-prog-track"><div class="g-prog-fill" id="g-prog"></div></div>
+          <div class="g-prog-labels">
+            <span id="g-prog-label">flip a tile to start the clock</span>
+            <span id="g-prog-pct">0 / 8</span>
+          </div>
+        </div>
+
+        <div class="game-grid" id="game-grid"></div>
+
+        <div class="game-toast" id="game-toast">tap any tile to begin — find all 8 matching pairs</div>
+
+        <div class="game-result" id="game-result">
+          <div class="result-badge win" id="result-badge">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-9" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="result-title" id="result-title">Memory <span class="accent">Unlocked</span></div>
+          <p class="result-sub" id="result-sub">Your photo memory is sharper than our servers.</p>
+          <div class="result-stats">
+            <div class="result-stat"><b id="rs-moves">—</b><span>moves</span></div>
+            <div class="result-stat"><b id="rs-time">—</b><span>time left</span></div>
+            <div class="result-stat"><b id="rs-score">—</b><span>score</span></div>
+          </div>
+          <button class="result-btn" onclick="initGame()">shuffle & play again</button>
+        </div>
+
+      </div>
     </div>
-    <div class="pol-caption">anniversary_backup.cr3<br>emotions: buffering</div>
-  </div>
-  <div class="pol" onclick="shutterClick(this)">
-    <div class="pol-img">
-      <svg width="96" height="96" viewBox="0 0 96 96" fill="none"><rect width="96" height="96" fill="#FFF5F0"/><circle cx="48" cy="48" r="30" fill="none" stroke="#FD721E" stroke-width="1" opacity=".16" stroke-dasharray="5 5"/><path d="M48 28 L51.5 40.5 L65 40.5 L54.5 48.5 L58 61 L48 53.5 L38 61 L41.5 48.5 L31 40.5 L44.5 40.5 Z" fill="#FD721E" opacity=".32"/></svg>
-    </div>
-    <div class="pol-caption">birthday_magic.raw<br>still processing</div>
-  </div>
-  <div class="pol" onclick="shutterClick(this)">
-    <div class="pol-img">
-      <svg width="96" height="96" viewBox="0 0 96 96" fill="none"><rect width="96" height="96" fill="#FFF2EE"/><circle cx="48" cy="42" r="10" fill="#FD721E" opacity=".24"/><circle cx="48" cy="36" r="6" fill="#FF1803" opacity=".36"/><path d="M37 56 Q48 50 59 56" stroke="#FD721E" stroke-width="2" fill="none" opacity=".38" stroke-linecap="round"/></svg>
-    </div>
-    <div class="pol-caption">wedding_final_v47.dng<br>almost done</div>
-  </div>
+
+  </main>
 </div>
 
-<div class="dots tl" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-<div class="dots br" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-
-<main class="stage">
-
-  <div class="status-pill">
-    <div class="status-dot"></div>
-    <span class="status-text">Scheduled Chaos · ETA: Soon™</span>
-  </div>
-
-  <!-- Logo -->
-  <div class="logo-section">
-    <div class="logo-orbit">
-      <div class="orbit-ring outer"></div>
-      <div class="orbit-ring inner"></div>
-      <div class="logo-btn" id="logo-btn" onclick="triggerEasterEgg()">
-        <svg class="logo-svg" viewBox="0 0 370 369" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M44.5686 302.84C26.8419 281.804 14.0576 257.061 7.1564 230.431C0.255244 203.802 -0.587105 175.964 4.69133 148.966L43.1657 156.488C39.0119 177.734 39.6748 199.641 45.1056 220.597C50.5364 241.552 60.5969 261.024 74.5467 277.578L44.5686 302.84Z" fill="url(#g1)"/>
-          <path d="M12.2373 121.703C21.5917 95.8331 36.6278 72.39 56.239 53.0987C75.8502 33.8074 99.5374 19.1589 125.558 10.2312L138.28 47.3121C117.804 54.3376 99.1635 65.8652 83.7307 81.0463C68.2978 96.2274 56.4653 114.676 49.1039 135.034L12.2373 121.703Z" fill="url(#g1)"/>
-          <path d="M152.941 3.13459C180.022 -1.69915 207.843 -0.399101 234.355 6.93904C260.867 14.2772 285.397 27.4666 306.138 45.5369L280.387 75.0956C264.064 60.8754 244.761 50.496 223.897 44.7213C203.034 38.9467 181.141 37.9236 159.83 41.7275L152.941 3.13459Z" fill="url(#g1)"/>
-          <path d="M152.941 3.13459C180.022 -1.69915 207.843 -0.399101 234.355 6.93904C260.867 14.2772 285.397 27.4666 306.138 45.5369L280.387 75.0956C264.064 60.8754 244.761 50.496 223.897 44.7213C203.034 38.9467 181.141 37.9236 159.83 41.7275L152.941 3.13459Z" fill="black" fill-opacity="0.17"/>
-          <path d="M325.976 65.7035C343.703 86.7395 356.487 111.483 363.388 138.112C370.289 164.742 371.132 192.579 365.853 219.577L327.379 212.055C331.533 190.809 330.87 168.903 325.439 147.947C320.008 126.991 309.948 107.52 295.998 90.9655L325.976 65.7035Z" fill="url(#g1)"/>
-          <path d="M358.307 246.841C348.953 272.71 333.917 296.154 314.306 315.445C294.695 334.736 271.007 349.385 244.987 358.312L232.264 321.231C252.741 314.206 271.381 302.678 286.814 287.497C302.247 272.316 314.079 253.868 321.441 233.51L358.307 246.841Z" fill="url(#g1)"/>
-          <path d="M358.307 246.841C348.953 272.71 333.917 296.154 314.306 315.445C294.695 334.736 271.007 349.385 244.987 358.312L232.264 321.231C252.741 314.206 271.381 302.678 286.814 287.497C302.247 272.316 314.079 253.868 321.441 233.51L358.307 246.841Z" fill="black" fill-opacity="0.17"/>
-          <path d="M217.604 365.409C190.523 370.243 162.702 368.943 136.19 361.605C109.677 354.266 85.1479 341.077 64.4062 323.007L90.1578 293.448C106.48 307.668 125.784 318.048 146.647 323.822C167.511 329.597 189.404 330.62 210.715 326.816L217.604 365.409Z" fill="url(#g1)"/>
-          <circle cx="185.5" cy="183.5" r="127.5" fill="#D2D3D7"/>
-          <circle cx="185.5" cy="183.5" r="101.121" fill="#515151"/>
-          <circle cx="185.5" cy="183.5" r="92.3276" fill="#3D3D3D"/>
-          <circle class="logo-pupil" cx="184.621" cy="182.62" r="38.6897" fill="#050601"/>
-          <path d="M131.895 194.876C129.97 195.471 127.915 194.396 127.451 192.436C124.732 180.945 125.855 168.874 130.648 158.083C131.465 156.242 133.684 155.564 135.465 156.504C137.247 157.443 137.915 159.645 137.117 161.494C133.203 170.562 132.265 180.642 134.438 190.276C134.882 192.241 133.819 194.281 131.895 194.876Z" fill="#F6F6F6"/>
-          <path d="M111.553 206.404C110.937 206.594 110.282 206.249 110.101 205.63C106.725 194.097 106.094 181.927 108.266 170.096C110.508 157.883 115.671 146.392 123.314 136.605C130.958 126.818 140.855 119.025 152.162 113.891C163.114 108.917 175.074 106.581 187.081 107.062C187.726 107.088 188.22 107.64 188.184 108.284C188.148 108.928 187.597 109.42 186.953 109.395C175.321 108.935 163.737 111.2 153.128 116.018C142.164 120.997 132.567 128.553 125.156 138.043C117.744 147.533 112.738 158.675 110.564 170.518C108.46 181.978 109.068 193.766 112.333 204.94C112.514 205.559 112.17 206.213 111.553 206.404Z" fill="#F6F6F6"/>
-          <path d="M138.677 151.071C137.068 149.944 136.668 147.717 137.898 146.185C145.33 136.931 155.61 130.381 167.138 127.554C169.046 127.086 170.895 128.39 171.236 130.324C171.578 132.259 170.281 134.091 168.378 134.578C158.704 137.053 150.07 142.555 143.74 150.277C142.495 151.796 140.287 152.198 138.677 151.071Z" fill="#F6F6F6"/>
-          <ellipse cx="208.5" cy="224" rx="3.5" ry="4" fill="#F6F6F6"/>
-          <defs>
-            <linearGradient id="g1" x1="242.83" y1="70.146" x2="53.96" y2="254.022" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#FD721E"/><stop offset="1" stop-color="#FF1803"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
-    </div>
-    <div class="wordmark"><span class="wm-m">Moment</span><span class="wm-p">Pik</span></div>
-  </div>
-
-  <!-- Headline -->
-  <h1 class="headline">
-    We're <span class="hl-normal hl-accent">technically</span><br>
-    still <em>existing</em> — just<br>
-    <span class="hl-normal">barely.</span>
-  </h1>
-
-  <p class="sub">Our servers have gone full introvert — they need a moment. Your precious memories are absolutely fine. It's our collective dignity that's under reconstruction.</p>
-  <p class="sub-mono">// est. fix time: "soon" (engineers define this differently than humans)</p>
-
-  <!-- Ticker -->
-  <div class="ticker-wrap">
-    <div class="ticker" id="ticker">
-      <span class="ticker-item">404: sarcasm module working perfectly <span class="sep">◆</span></span>
-      <span class="ticker-item">servers in group therapy since 09:42am <span class="sep">◆</span></span>
-      <span class="ticker-item">your photos are safe. our uptime, less so <span class="sep">◆</span></span>
-      <span class="ticker-item">rebooted 7 times. now it's personal <span class="sep">◆</span></span>
-      <span class="ticker-item">stack overflow: the website AND our situation <span class="sep">◆</span></span>
-      <span class="ticker-item">coffee consumed: ∞ · bugs fixed: lol <span class="sep">◆</span></span>
-      <span class="ticker-item">no developers were harmed (emotionally debatable) <span class="sep">◆</span></span>
-      <span class="ticker-item">404: sarcasm module working perfectly <span class="sep">◆</span></span>
-      <span class="ticker-item">servers in group therapy since 09:42am <span class="sep">◆</span></span>
-      <span class="ticker-item">your photos are safe. our uptime, less so <span class="sep">◆</span></span>
-      <span class="ticker-item">rebooted 7 times. now it's personal <span class="sep">◆</span></span>
-      <span class="ticker-item">stack overflow: the website AND our situation <span class="sep">◆</span></span>
-      <span class="ticker-item">coffee consumed: ∞ · bugs fixed: lol <span class="sep">◆</span></span>
-      <span class="ticker-item">no developers were harmed (emotionally debatable) <span class="sep">◆</span></span>
-    </div>
-  </div>
-
-  <!-- Sarcasm quote -->
-  <div class="sarcasm-card">
-    <div class="sarcasm-text in" id="sarcasm-text">Have you tried closing the browser and reopening it? Our engineers did. To the servers. Twelve times.</div>
-    <div class="sarcasm-attr" id="sarcasm-attr">— The Dev Team, 9:47am, still in pajamas</div>
-  </div>
-
-  <!-- Status card -->
-  <div class="status-card">
-    <div class="sc-header">
-      <div class="sc-label">Live Situation Report</div>
-      <div class="sc-timestamp" id="sc-time">00:00:00 UTC</div>
-    </div>
-    <div class="sc-message fade-in" id="sc-msg">Attempting to convince the server it has intrinsic value…</div>
-    <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
-    <div class="prog-meta">
-      <span id="prog-label">Summoning the cloud…</span>
-      <span id="prog-pct">0%</span>
-    </div>
-    <div class="checklist" id="checklist">
-      <div class="check-item" id="c1"><div class="check-icon">·</div><span>Server acknowledged our existence</span></div>
-      <div class="check-item" id="c2"><div class="check-icon">·</div><span>Database agreeing to cooperate</span></div>
-      <div class="check-item" id="c3"><div class="check-icon">·</div><span>Cache cleared (emotional baggage pending)</span></div>
-      <div class="check-item" id="c4"><div class="check-icon">·</div><span>Blamed intern, undid blame, blamed DNS</span></div>
-    </div>
-  </div>
-
-  <!-- ══════════ MEMORY MOSAIC GAME ══════════ -->
-  <div class="game-section">
-
-    <div class="game-divider">
-      <div class="game-divider-line"></div>
-      <div class="game-divider-icon">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#FD721E" stroke-width="1"/><circle cx="7" cy="7" r="2.5" fill="#FD721E" opacity=".4"/><circle cx="7" cy="4.5" r="1" fill="#FD721E" opacity=".6"/></svg>
-      </div>
-      <div class="game-divider-label">kill time · play a round</div>
-      <div class="game-divider-line"></div>
-    </div>
-
-    <div class="game-card" id="game-card">
-
-      <!-- Header -->
-      <div class="game-header">
-        <div class="game-title-block">
-          <div class="game-title">Memory <span>Mosaic</span></div>
-          <div class="game-subtitle">match the photo memories before time runs out</div>
-        </div>
-        <div class="game-stats">
-          <div class="g-stat">
-            <span class="g-stat-val" id="g-timer">60</span>
-            <div class="g-stat-label">secs</div>
-          </div>
-          <div class="g-stat">
-            <span class="g-stat-val" id="g-moves">0</span>
-            <div class="g-stat-label">moves</div>
-          </div>
-          <div class="g-stat">
-            <span class="g-stat-val" id="g-pairs">0<span style="font-size:0.65rem;opacity:0.4">/8</span></span>
-            <div class="g-stat-label">pairs</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Progress -->
-      <div class="game-prog-wrap">
-        <div class="game-prog-track"><div class="game-prog-fill" id="g-prog"></div></div>
-        <div class="game-prog-label">
-          <span id="g-prog-label">flip a tile to start the clock</span>
-          <span id="g-prog-pct">0 / 8</span>
-        </div>
-      </div>
-
-      <!-- Grid -->
-      <div class="game-grid" id="game-grid"></div>
-
-      <!-- Toast -->
-      <div class="game-toast" id="game-toast">tap any tile to begin — find all 8 matching pairs</div>
-
-      <!-- Result screen -->
-      <div class="game-result" id="game-result">
-        <div class="result-badge win" id="result-badge">
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M8 15l5 5 9-9" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="result-title" id="result-title">Memory <span class="accent">Unlocked</span></div>
-        <p class="result-sub" id="result-sub">Your photo memory is sharper than our servers.</p>
-        <div class="result-stats">
-          <div class="result-stat"><b id="rs-moves">—</b><span>moves</span></div>
-          <div class="result-stat"><b id="rs-time">—</b><span>time left</span></div>
-          <div class="result-stat"><b id="rs-score">—</b><span>score</span></div>
-        </div>
-        <button class="result-btn" onclick="initGame()">shuffle & play again</button>
-      </div>
-
-    </div>
-  </div>
-  <!-- ══════════ END GAME ══════════ -->
-
-  <!-- Diagnostic grid -->
-  <div class="diag-grid">
-    <div class="diag-cell"><span class="diag-val ok" id="dv-uptime">98.2%</span><span class="diag-name">Monthly Uptime</span></div>
-    <div class="diag-cell"><span class="diag-val bad" id="dv-today">0%</span><span class="diag-name">Today's Uptime</span></div>
-    <div class="diag-cell"><span class="diag-val" id="dv-clicks">0</span><span class="diag-name">Retry Clicks</span></div>
-  </div>
-
-  <!-- CTA -->
-  <div class="cta-wrap">
-    <div class="cta-row">
-      <button class="btn-primary" id="retry-btn" onclick="handleRetry()">
-        <div class="btn-shine"></div>
-        <span id="btn-label">Give it another shot 📸</span>
-      </button>
-      <button class="btn-ghost" onclick="handleNotify()">Notify me when alive</button>
-    </div>
-    <p class="cta-note" id="cta-note">Clicking this button is a valid form of emotional processing. We won't judge.</p>
-  </div>
-
-</main>
-
-<!-- Footer -->
-<footer>
-  <div class="footer-logo">
-    <svg class="footer-logo-icon" viewBox="0 0 370 369" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M44.5686 302.84C26.8419 281.804 14.0576 257.061 7.1564 230.431C0.255244 203.802 -0.587105 175.964 4.69133 148.966L43.1657 156.488C39.0119 177.734 39.6748 199.641 45.1056 220.597C50.5364 241.552 60.5969 261.024 74.5467 277.578L44.5686 302.84Z" fill="url(#gf)"/>
-      <path d="M12.2373 121.703C21.5917 95.8331 36.6278 72.39 56.239 53.0987C75.8502 33.8074 99.5374 19.1589 125.558 10.2312L138.28 47.3121C117.804 54.3376 99.1635 65.8652 83.7307 81.0463C68.2978 96.2274 56.4653 114.676 49.1039 135.034L12.2373 121.703Z" fill="url(#gf)"/>
-      <path d="M152.941 3.13459C180.022 -1.69915 207.843 -0.399101 234.355 6.93904C260.867 14.2772 285.397 27.4666 306.138 45.5369L280.387 75.0956C264.064 60.8754 244.761 50.496 223.897 44.7213C203.034 38.9467 181.141 37.9236 159.83 41.7275L152.941 3.13459Z" fill="url(#gf)"/>
-      <path d="M325.976 65.7035C343.703 86.7395 356.487 111.483 363.388 138.112C370.289 164.742 371.132 192.579 365.853 219.577L327.379 212.055C331.533 190.809 330.87 168.903 325.439 147.947C320.008 126.991 309.948 107.52 295.998 90.9655L325.976 65.7035Z" fill="url(#gf)"/>
-      <path d="M358.307 246.841C348.953 272.71 333.917 296.154 314.306 315.445C294.695 334.736 271.007 349.385 244.987 358.312L232.264 321.231C252.741 314.206 271.381 302.678 286.814 287.497C302.247 272.316 314.079 253.868 321.441 233.51L358.307 246.841Z" fill="url(#gf)"/>
-      <path d="M217.604 365.409C190.523 370.243 162.702 368.943 136.19 361.605C109.677 354.266 85.1479 341.077 64.4062 323.007L90.1578 293.448C106.48 307.668 125.784 318.048 146.647 323.822C167.511 329.597 189.404 330.62 210.715 326.816L217.604 365.409Z" fill="url(#gf)"/>
-      <circle cx="185.5" cy="183.5" r="127.5" fill="#D2D3D7"/>
-      <circle cx="185.5" cy="183.5" r="101.121" fill="#515151"/>
-      <circle cx="185.5" cy="183.5" r="92.3276" fill="#3D3D3D"/>
-      <circle cx="184.621" cy="182.62" r="38.6897" fill="#050601"/>
-      <path d="M131.895 194.876C129.97 195.471 127.915 194.396 127.451 192.436C124.732 180.945 125.855 168.874 130.648 158.083C131.465 156.242 133.684 155.564 135.465 156.504C137.247 157.443 137.915 159.645 137.117 161.494C133.203 170.562 132.265 180.642 134.438 190.276C134.882 192.241 133.819 194.281 131.895 194.876Z" fill="#F6F6F6"/>
-      <path d="M111.553 206.404C110.937 206.594 110.282 206.249 110.101 205.63C106.725 194.097 106.094 181.927 108.266 170.096C110.508 157.883 115.671 146.392 123.314 136.605C130.958 126.818 140.855 119.025 152.162 113.891C163.114 108.917 175.074 106.581 187.081 107.062C187.726 107.088 188.22 107.64 188.184 108.284C188.148 108.928 187.597 109.42 186.953 109.395C175.321 108.935 163.737 111.2 153.128 116.018C142.164 120.997 132.567 128.553 125.156 138.043C117.744 147.533 112.738 158.675 110.564 170.518C108.46 181.978 109.068 193.766 112.333 204.94C112.514 205.559 112.17 206.213 111.553 206.404Z" fill="#F6F6F6"/>
-      <path d="M138.677 151.071C137.068 149.944 136.668 147.717 137.898 146.185C145.33 136.931 155.61 130.381 167.138 127.554C169.046 127.086 170.895 128.39 171.236 130.324C171.578 132.259 170.281 134.091 168.378 134.578C158.704 137.053 150.07 142.555 143.74 150.277C142.495 151.796 140.287 152.198 138.677 151.071Z" fill="#F6F6F6"/>
-      <ellipse cx="208.5" cy="224" rx="3.5" ry="4" fill="#F6F6F6"/>
-      <defs><linearGradient id="gf" x1="242.83" y1="70.146" x2="53.96" y2="254.022" gradientUnits="userSpaceOnUse"><stop stop-color="#FD721E"/><stop offset="1" stop-color="#FF1803"/></linearGradient></defs>
-    </svg>
-    <div class="footer-wm"><span class="footer-wm-m">Moment</span><span class="footer-wm-p">Pik</span></div>
-  </div>
-  <div class="footer-tagline">Photos that Find You — even when we can't find ourselves.</div>
-  <div class="footer-links">
-    <a href="https://momentpik.com">Home</a>
-    <a href="mailto:hello@momentpik.com">Contact</a>
-    <a href="#" onclick="return false;">Status</a>
-  </div>
-</footer>
-
 <script>
-// ── Cursor ──
-const cursor = document.getElementById('cursor');
+// ══════════════════════════════════════════
+// CURSOR
+// ══════════════════════════════════════════
+const cur = document.getElementById('cursor');
 const ring = document.getElementById('cursor-ring');
-let mx=-100,my=-100,rx=-100,ry=-100;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
-(function animCursor(){
-  cursor.style.left=mx+'px';cursor.style.top=my+'px';
-  rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;
-  ring.style.left=rx+'px';ring.style.top=ry+'px';
+let mx = -100, my = -100, rx = -100, ry = -100;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animCursor() {
+  cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
   requestAnimationFrame(animCursor);
 })();
-document.querySelectorAll('button,.pol,.logo-btn,a,[onclick],.tile').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{cursor.style.width='20px';cursor.style.height='20px';ring.style.width='50px';ring.style.height='50px';ring.style.borderColor='var(--rd)';});
-  el.addEventListener('mouseleave',()=>{cursor.style.width='12px';cursor.style.height='12px';ring.style.width='36px';ring.style.height='36px';ring.style.borderColor='var(--or)';});
+
+function makeCursorBig() {
+  cur.style.width = '18px'; cur.style.height = '18px';
+  ring.style.width = '48px'; ring.style.height = '48px';
+  ring.style.borderColor = 'var(--rd)';
+}
+function makeCursorSmall() {
+  cur.style.width = '11px'; cur.style.height = '11px';
+  ring.style.width = '34px'; ring.style.height = '34px';
+  ring.style.borderColor = 'var(--or)';
+}
+document.querySelectorAll('button,.logo-btn,.tile,.result-btn,[onclick]').forEach(el => {
+  el.addEventListener('mouseenter', makeCursorBig);
+  el.addEventListener('mouseleave', makeCursorSmall);
 });
 
-// ── Falling blades ──
-const bladeField=document.getElementById('blade-field');
-function spawnBlade(){
-  const b=document.createElement('div');b.className='blade';
-  const x=Math.random()*100,h=40+Math.random()*80,dur=6+Math.random()*10,rot=-20+Math.random()*40,delay=Math.random()*8;
-  b.style.cssText=`left:${x}%;height:${h}px;--rot:${rot}deg;animation-duration:${dur}s;animation-delay:${delay}s;`;
-  bladeField.appendChild(b);setTimeout(()=>b.remove(),(dur+delay)*1000+500);
+// ══════════════════════════════════════════
+// ROTATING STATUS PILL
+// ══════════════════════════════════════════
+const statusMsgs = [
+  'Scheduled Chaos · ETA: Soon™',
+  'Server group therapy in progress',
+  'DNS blamed · awaiting trial',
+  'Rebooting with feelings this time',
+  '404: calm not found',
+  'Coffee: ∞ · Bugs fixed: lol',
+  'It\'s not a bug, it\'s a vibe',
+  'Stack overflow: the site AND us',
+  'Deploy on Friday: a horror story',
+  'No ETA · just vibes',
+  'Intern blamed · intern acquitted',
+  'The cloud is thinking',
+];
+let sIdx = 0;
+const statusEl = document.getElementById('status-text');
+setInterval(() => {
+  statusEl.classList.add('fade');
+  setTimeout(() => {
+    sIdx = (sIdx + 1) % statusMsgs.length;
+    statusEl.textContent = statusMsgs[sIdx];
+    statusEl.classList.remove('fade');
+  }, 260);
+}, 4000);
+
+// ══════════════════════════════════════════
+// ROTATING QUOTES
+// ══════════════════════════════════════════
+const quotes = [
+  { text: "Have you tried closing the browser and reopening it? Our engineers did. To the servers. Twelve times.", attr: "— The Dev Team, 9:47am, still in pajamas" },
+  { text: "Our uptime monitoring is down. We're monitoring it manually by refreshing and sighing loudly.", attr: "— Lead Engineer, who hasn't blinked since Tuesday" },
+  { text: "The good news: your memories are 100% safe. The bad news: we need a moment to remember where we put them.", attr: "— MomentPik Support Bot (also down)" },
+  { text: "We've tried turning it off and on again. It took it personally. We're currently in arbitration.", attr: "— Server Relations Department (est. today)" },
+  { text: "It's not a bug. It's a carefully curated pause to help you appreciate the app more when it returns.", attr: "— Our PM, who is extremely creative with words" },
+  { text: "Five engineers. Three Red Bulls. One mysterious error. Zero explanations. Welcome to Tuesday.", attr: "— Anonymous Slack message, pinned for morale" },
+  { text: "The server said it needed space. We gave it 2TB. It still won't talk to us.", attr: "— Infrastructure Team, genuinely hurt" },
+  { text: "We consulted Stack Overflow. Stack Overflow is also down. This is fine.", attr: "— Everyone, simultaneously" },
+  { text: "Turns out 'deploy on Friday' was, indeed, a narrative choice.", attr: "— The whole team, in retrospect" },
+  { text: "Our error logs are a modern art installation at this point. Very expressive. Very abstract.", attr: "— QA Engineer, weeping softly" },
+  { text: "We pinky-promised this wouldn't happen again. Our fingers are crossed. Literally.", attr: "— CEO, in denial" },
+  { text: "The cloud is just someone else's computer. That someone else is also confused right now.", attr: "— DevOps, 3am, still going" },
+];
+let qIdx = 0;
+const qText = document.getElementById('quote-text');
+const qAttr = document.getElementById('quote-attr');
+setInterval(() => {
+  qText.classList.add('out'); qAttr.classList.add('fade');
+  setTimeout(() => {
+    qIdx = (qIdx + 1) % quotes.length;
+    qText.textContent = quotes[qIdx].text;
+    qAttr.textContent = quotes[qIdx].attr;
+    qText.classList.remove('out'); qText.classList.add('in');
+    qAttr.classList.remove('fade');
+  }, 320);
+}, 5500);
+
+// ══════════════════════════════════════════
+// RETRY BUTTON
+// ══════════════════════════════════════════
+const retryLabels = [
+  'Give it another shot 📸',
+  'Still you. Still trying. 💪',
+  'Okay, third time\'s a charm →',
+  'At this point it\'s a ritual 🙏',
+  'We respect the dedication 🫡',
+  'You and the button: soulmates 💍',
+  'Philosophers have studied this —',
+  'We\'ve named this button after you',
+  'Commitment unlocked. Legend. 🏆',
+  'The servers noticed. Allegedly.',
+];
+const retryNotes = [
+  'Clicking this button is a valid form of emotional processing.',
+  'The servers noticed. They\'re trying harder now. Allegedly.',
+  'Bold strategy. Results pending. Very pending.',
+  'You and the button have something real.',
+  'At this point, mutual respect has been established.',
+  'Commitment unlocked. Achievement: True Believer.',
+  'Nietzsche would approve of this retry loop.',
+  'You have become part of our uptime mythology.',
+  'A legend clicks. The servers listen. Slowly.',
+  'Your loyalty is our greatest asset. Truly.',
+];
+let retries = 0;
+function handleRetry() {
+  retries++;
+  const i = Math.min(retries - 1, retryLabels.length - 1);
+  document.getElementById('btn-label').textContent = retryLabels[i];
+  document.getElementById('cta-note').textContent = retryNotes[i];
+  const lb = document.querySelector('.logo-btn');
+  lb.style.transform = 'scale(0.84) rotate(6deg)';
+  setTimeout(() => { lb.style.transform = ''; }, 200);
+  showToast(retries <= 2 ? 'Retry signal sent! (The server nodded.)' :
+            retries <= 4 ? 'Still sending. It\'s a lifestyle now.' :
+            '🥲 Our most loyal user. Genuinely touched.');
 }
-for(let i=0;i<18;i++)setTimeout(spawnBlade,i*600);
-setInterval(spawnBlade,1200);
+function handleNotify() {
+  showToast('We\'ll email you! (Once our email server is also back up.)');
+}
 
-// ── Clock ──
-function updateClock(){document.getElementById('sc-time').textContent=new Date().toUTCString().split(' ')[4]+' UTC';}
-setInterval(updateClock,1000);updateClock();
-
-// ── Status messages ──
-const msgs=["Attempting to convince the server it has intrinsic value…","Performing surgery on a production database (with gloves this time)…","Begging the CDN to please, please cooperate…","Checking if we accidentally deleted the internet…","Teaching the load balancer about work-life balance…","Apologizing to the cache for clearing it without notice…","Running `git blame` — everyone is equally traumatized…","Sending the server a motivational poster…","Confirming the cloud is, indeed, still a cloud…","Rehydrating our engineer after 6 hours of bug hunting…"];
-const progLabels=["Summoning the cloud…","Negotiating uptime…","Bribing the database…","Almost convincing it…","Polishing the pixels…"];
-let msgIdx=0,progVal=0,retryCount=0;
-const scMsg=document.getElementById('sc-msg'),progFill=document.getElementById('prog-fill'),progPct=document.getElementById('prog-pct'),progLabel=document.getElementById('prog-label');
-function rotateMsg(){scMsg.classList.remove('fade-in');scMsg.classList.add('fade-out');setTimeout(()=>{msgIdx=(msgIdx+1)%msgs.length;scMsg.textContent=msgs[msgIdx];scMsg.classList.remove('fade-out');scMsg.classList.add('fade-in');},320);}
-setInterval(rotateMsg,3500);
-function tickProgress(){if(progVal<79){const speed=progVal<35?0.6:progVal<60?0.25:0.07;progVal=Math.min(79,progVal+speed+Math.random()*0.3);progFill.style.width=progVal.toFixed(1)+'%';progPct.textContent=Math.round(progVal)+'%';progLabel.textContent=progLabels[Math.min(Math.floor(progVal/18),4)];}}
-setInterval(tickProgress,90);
-
-// Checklist
-const checks=['c1','c2','c3','c4'],checkDelay=[2800,6500,11000,17000];
-checks.forEach((id,i)=>{setTimeout(()=>{const el=document.getElementById(id);if(!el)return;const icon=el.querySelector('.check-icon');if(id==='c3'){el.classList.add('fail');icon.textContent='✕';setTimeout(()=>{el.classList.remove('fail');el.classList.add('done');icon.textContent='✓';},2200);}else{el.classList.add('done');icon.textContent='✓';}},checkDelay[i]);});
-
-// ── Sarcasm quotes ──
-const sarcasms=[
-  {text:"Have you tried closing the browser and reopening it? Our engineers did. To the servers. Twelve times.",attr:"— The Dev Team, 9:47am, still in pajamas"},
-  {text:"Our uptime monitoring is currently down. We're monitoring it manually by refreshing the page and sighing.",attr:"— Lead Engineer, who hasn't blinked since Tuesday"},
-  {text:"The good news: your memories are 100% safe. The bad news: we need a moment to remember where we put them.",attr:"— MomentPik Support Bot (also down)"},
-  {text:"We've tried turning it off and on again. It took it personally. We're in arbitration.",attr:"— Server Relations Department (est. today)"},
-  {text:"It's not a bug. It's a carefully curated pause to help you appreciate the app more when it returns.",attr:"— Our PM, who is extremely creative with words"},
-  {text:"Five engineers. Three Red Bulls. One mysterious error. Zero explanations. Welcome to Tuesday.",attr:"— Anonymous Slack message, pinned for morale"},
-];
-let sarIdx=0;
-const sarcasmText=document.getElementById('sarcasm-text'),sarcasmAttr=document.getElementById('sarcasm-attr');
-function rotateSarcasm(){sarcasmText.classList.remove('in');sarcasmText.classList.add('out');setTimeout(()=>{sarIdx=(sarIdx+1)%sarcasms.length;sarcasmText.textContent=sarcasms[sarIdx].text;sarcasmAttr.textContent=sarcasms[sarIdx].attr;sarcasmText.classList.remove('out');sarcasmText.classList.add('in');},380);}
-setInterval(rotateSarcasm,5000);
-
-// ── Retry button ──
-const retryLabels=["Give it another shot 📸","Still you. Still trying. 💪","Okay third time's a charm →","At this point it's a ritual 🙏","We respect the dedication 🫡","You and the button: soulmates 💍","Philosophers have studied this —","We've named this button after you"];
-const retryNotes=["Clicking this button is a valid form of emotional processing. We won't judge.","The servers noticed. They're trying harder now. Allegedly.","Bold strategy. Results pending. Very pending.","You and the button have something real.","At this point, mutual respect has been established.","Commitment unlocked. Achievement: True Believer.","Nietzsche would approve of this retry loop.","You have become part of our uptime mythology."];
-const dvClicks=document.getElementById('dv-clicks');
-function handleRetry(){retryCount++;dvClicks.textContent=retryCount;const i=Math.min(retryCount-1,retryLabels.length-1);document.getElementById('btn-label').textContent=retryLabels[i];document.getElementById('cta-note').textContent=retryNotes[i];progVal=0;progFill.style.transition='none';progFill.style.width='0%';progPct.textContent='0%';setTimeout(()=>{progFill.style.transition='width 0.5s cubic-bezier(0.4,0,0.2,1)';},60);const logo=document.getElementById('logo-btn');logo.style.transform='scale(0.86) rotate(5deg)';setTimeout(()=>{logo.style.transform='';},180);showToast(retryCount<=2?"Retry signal sent! (The server nodded.)":retryCount<=4?"Still sending. It's more of a lifestyle now.":"You are our most loyal user. Genuinely touched. 🥲");}
-function handleNotify(){showToast("We'll email you! (Once our email server is also back up.)");}
-
-// ── Toast ──
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
 let toastTimer;
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3200);}
-
-// ── Easter eggs ──
-function triggerEasterEgg(){const flash=document.getElementById('flash');flash.classList.add('flash');setTimeout(()=>flash.classList.remove('flash'),100);setTimeout(()=>showToast("📸 *click* — captured your frustration. Beautiful shot."),150);}
-function shutterClick(el){el.style.transform=el.style.transform+' scale(0.93)';triggerFlash();setTimeout(()=>{el.style.transform='';},140);showToast("Snap! At least something's working around here 📸");}
-function triggerFlash(){const flash=document.getElementById('flash');flash.classList.add('flash');setTimeout(()=>flash.classList.remove('flash'),90);}
-
-// ── Diagnostic uptime ──
-const dvToday=document.getElementById('dv-today');let todayUptime=0;
-setTimeout(()=>{setInterval(()=>{todayUptime=Math.min(todayUptime+0.01,99.9);dvToday.textContent=todayUptime.toFixed(1)+'%';if(todayUptime>5)dvToday.classList.remove('bad');},3000);},8000);
-
-// ── Konami code ──
-const konami=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];let kIdx=0;
-document.addEventListener('keydown',e=>{if(e.key===konami[kIdx]){kIdx++;}else{kIdx=0;}if(kIdx===konami.length){kIdx=0;showToast("🎮 Konami code! +30 years of uptime added. You're welcome.");for(let i=0;i<6;i++)setTimeout(spawnBlade,i*100);}});
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
 
 // ══════════════════════════════════════════
-// MEMORY MOSAIC — GAME LOGIC
+// EASTER EGG
 // ══════════════════════════════════════════
-const GAME_CARDS=[
-  {id:'sunset',cap:'golden_hour.raw\n404 colors found',svg:`<svg width="56" height="56" viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#FFF5F0"/><rect x="0" y="36" width="56" height="20" fill="#FFE8D6" opacity=".7"/><ellipse cx="28" cy="36" rx="16" ry="16" fill="#FD721E" opacity=".28"/><ellipse cx="28" cy="36" rx="10" ry="10" fill="#FF1803" opacity=".44"/><rect x="0" y="36" width="56" height="2" fill="#FD721E" opacity=".4"/><ellipse cx="28" cy="34" rx="22" ry="7" fill="#FFB380" opacity=".18"/></svg>`},
-  {id:'rain',cap:'rainy_walk.jpg\nmood: +200%',svg:`<svg width="56" height="56" viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#F5F0FF"/><ellipse cx="28" cy="16" rx="18" ry="11" fill="#C4B8F0" opacity=".55"/><ellipse cx="18" cy="18" rx="11" ry="8" fill="#A89CE0" opacity=".38"/><line x1="18" y1="30" x2="16" y2="40" stroke="#9B8ED4" stroke-width="1.5" stroke-linecap="round" opacity=".5"/><line x1="27" y1="29" x2="25" y2="39" stroke="#9B8ED4" stroke-width="1.5" stroke-linecap="round" opacity=".5"/><line x1="37" y1="30" x2="35" y2="40" stroke="#9B8ED4" stroke-width="1.5" stroke-linecap="round" opacity=".5"/><line x1="46" y1="29" x2="44" y2="39" stroke="#9B8ED4" stroke-width="1.5" stroke-linecap="round" opacity=".4"/></svg>`},
-  {id:'coffee',cap:'breakfast_blur.dng\nbeans: heroic',svg:`<svg width="56" height="56" viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#FFF8F0"/><ellipse cx="28" cy="48" rx="16" ry="3.5" fill="#FD721E" opacity=".1"/><rect x="17" y="18" width="22" height="26" rx="5" fill="#FF9A1F" opacity=".25"/><rect x="19" y="20" width="18" height="22" rx="4" fill="#FD721E" opacity=".18"/><ellipse cx="28" cy="31" rx="7" ry="8" fill="#FF6B00" opacity=".22"/><rect x="39" y="28" width="5" height="9" rx="2.5" fill="#FD721E" opacity=".2" transform="rotate(20 39 28)"/><ellipse cx="28" cy="19" rx="10" ry="3.5" fill="#FFB380" opacity=".4"/></svg>`},
-  {id:'stars',cap:'night_sky.raw\nfilter: none needed',svg:`<svg width="56" height="56" viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#1A1040"/><circle cx="10" cy="12" r="1.5" fill="white" opacity=".9"/><circle cx="24" cy="7" r="1" fill="white" opacity=".7"/><circle cx="40" cy="11" r="2" fill="white" opacity=".85"/><circle cx="50" cy="20" r="1" fill="white" opacity=".6"/><circle cx="7" cy="27" r="1" fill="white" opacity=".5"/><circle cx="32" cy="18" r="1.5" fill="white" opacity=".9"/><circle cx="46" cy="34" r="1" fill="white" opacity=".6"/><circle cx="16" cy="38" r="1" fill="white" opacity=".5"/><ellipse cx="28" cy="46" rx="20" ry="7" fill="#FD721E" opacity=".15"/></svg>`},
-  {id:'flowers',cap:'garden_sunday.jpg\nno filter needed',svg:`<svg width="56" height="56" viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#F5FFF0"/><circle cx="20" cy="23" r="7" fill="#FD721E" opacity=".25"/><circle cx="20" cy="23" r="3.5" fill="#FF1803" opacity=".4"/><circle cx="38" cy="27" r="5.5" fill="#FD721E" opacity=".2"/><circle cx="38" cy="27" r="2.5" fill="#FF6B00" opacity=".35"/><circle cx="29" cy="17" r="4.5" fill="#FF9A1F" opacity=".28"/><circle cx="29" cy="17" r="2" fill="#FD721E" opacity=".45"/><line x1="20" y1="30" x2="20" y2="48" stroke="#5CAF3E" stroke-width="2" stroke-linecap="round" opacity=".5"/><line x1="38" y1="33" x2="36" y2="48" stroke="#5CAF3E" stroke-width="2" stroke-linecap="round" opacity=".5"/><line x1="29" y1="22" x2="27" y2="48" stroke="#5CAF3E" stroke-width="2" stroke-linecap="round" opacity=".5"/></svg>`},
-  {id:'mountains',cap:'altitude_feels.cr3\nbreath: optional',svg:`<svg width="56" height="56" viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#F0F5FF"/><rect x="0" y="40" width="56" height="16" fill="#E0E8FF" opacity=".6"/><polygon points="6,40 24,12 42,40" fill="#FF9A1F" opacity=".22"/><polygon points="20,40 38,18 56,40" fill="#FD721E" opacity=".18"/><polygon points="0,40 16,20 32,40" fill="#FFB380" opacity=".2"/><ellipse cx="24" cy="12" rx="5" ry="3.5" fill="white" opacity=".7"/></svg>`},
-  {id:'party',cap:'last_december.jpg\nservers joined late',svg:`<svg width="56" height="56" viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#FFF8FF"/><circle cx="28" cy="28" r="4.5" fill="#FF1803" opacity=".35"/><line x1="28" y1="8" x2="28" y2="23" stroke="#FD721E" stroke-width="2" stroke-linecap="round" opacity=".4"/><line x1="12" y1="18" x2="23" y2="25" stroke="#FF9A1F" stroke-width="2" stroke-linecap="round" opacity=".35"/><line x1="44" y1="18" x2="33" y2="25" stroke="#C4B8F0" stroke-width="2" stroke-linecap="round" opacity=".4"/><line x1="12" y1="42" x2="23" y2="32" stroke="#FD721E" stroke-width="2" stroke-linecap="round" opacity=".3"/><line x1="44" y1="42" x2="33" y2="32" stroke="#FF1803" stroke-width="2" stroke-linecap="round" opacity=".3"/><circle cx="28" cy="8" r="2.5" fill="#FF9A1F" opacity=".6"/><circle cx="12" cy="18" r="2" fill="#FD721E" opacity=".55"/><circle cx="44" cy="18" r="2" fill="#C4B8F0" opacity=".7"/><circle cx="12" cy="42" r="2" fill="#FD721E" opacity=".45"/><circle cx="44" cy="42" r="2" fill="#FF9A1F" opacity=".5"/></svg>`},
-  {id:'wave',cap:'beach_nostalgia.tiff\nwifi: 404',svg:`<svg width="56" height="56" viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#F0FAFF"/><ellipse cx="28" cy="48" rx="24" ry="5" fill="#B0D8F0" opacity=".4"/><path d="M2 36 Q12 27 21 34 Q30 41 39 32 Q48 23 56 30" stroke="#5BA8D4" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".5"/><path d="M0 44 Q9 37 18 42 Q27 47 36 40 Q45 33 56 38" stroke="#3A8BC0" stroke-width="2" fill="none" stroke-linecap="round" opacity=".38"/><circle cx="40" cy="14" r="9" fill="#FD721E" opacity=".18"/><circle cx="40" cy="14" r="5" fill="#FF9A1F" opacity=".28"/></svg>`}
+function triggerFlash() {
+  const f = document.getElementById('flash');
+  f.classList.add('flash');
+  setTimeout(() => f.classList.remove('flash'), 95);
+}
+function triggerEgg() {
+  triggerFlash();
+  setTimeout(() => showToast('📸 *click* — captured your frustration. Beautiful shot.'), 150);
+}
+
+// Konami code
+const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+let kIdx = 0;
+document.addEventListener('keydown', e => {
+  kIdx = (e.key === konami[kIdx]) ? kIdx + 1 : 0;
+  if (kIdx === konami.length) {
+    kIdx = 0;
+    showToast('🎮 Konami code! +30 years of uptime added. You\'re welcome.');
+  }
+});
+
+// ══════════════════════════════════════════
+// MEMORY MOSAIC GAME
+// ══════════════════════════════════════════
+const CARDS = [
+  { id:'sunset', cap:'golden_hour.raw', svg:`<svg viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#FFF5F0"/><rect x="0" y="36" width="56" height="20" fill="#FFE8D6" opacity=".7"/><ellipse cx="28" cy="36" rx="16" ry="16" fill="#FD721E" opacity=".28"/><ellipse cx="28" cy="36" rx="10" ry="10" fill="#FF1803" opacity=".44"/><rect x="0" y="36" width="56" height="2" fill="#FD721E" opacity=".4"/><ellipse cx="28" cy="34" rx="22" ry="7" fill="#FFB380" opacity=".18"/></svg>` },
+  { id:'rain',   cap:'rainy_walk.jpg',  svg:`<svg viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#F5F0FF"/><ellipse cx="28" cy="16" rx="18" ry="11" fill="#C4B8F0" opacity=".55"/><ellipse cx="18" cy="18" rx="11" ry="8" fill="#A89CE0" opacity=".38"/><line x1="18" y1="30" x2="16" y2="40" stroke="#9B8ED4" stroke-width="1.5" stroke-linecap="round" opacity=".5"/><line x1="27" y1="29" x2="25" y2="39" stroke="#9B8ED4" stroke-width="1.5" stroke-linecap="round" opacity=".5"/><line x1="37" y1="30" x2="35" y2="40" stroke="#9B8ED4" stroke-width="1.5" stroke-linecap="round" opacity=".5"/><line x1="46" y1="29" x2="44" y2="39" stroke="#9B8ED4" stroke-width="1.5" stroke-linecap="round" opacity=".4"/></svg>` },
+  { id:'coffee', cap:'breakfast.dng',   svg:`<svg viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#FFF8F0"/><ellipse cx="28" cy="48" rx="16" ry="3.5" fill="#FD721E" opacity=".1"/><rect x="17" y="18" width="22" height="26" rx="5" fill="#FF9A1F" opacity=".25"/><rect x="19" y="20" width="18" height="22" rx="4" fill="#FD721E" opacity=".18"/><ellipse cx="28" cy="31" rx="7" ry="8" fill="#FF6B00" opacity=".22"/><rect x="39" y="28" width="5" height="9" rx="2.5" fill="#FD721E" opacity=".2" transform="rotate(20 39 28)"/><ellipse cx="28" cy="19" rx="10" ry="3.5" fill="#FFB380" opacity=".4"/></svg>` },
+  { id:'stars',  cap:'night_sky.raw',   svg:`<svg viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#1A1040"/><circle cx="10" cy="12" r="1.5" fill="white" opacity=".9"/><circle cx="24" cy="7" r="1" fill="white" opacity=".7"/><circle cx="40" cy="11" r="2" fill="white" opacity=".85"/><circle cx="50" cy="20" r="1" fill="white" opacity=".6"/><circle cx="7" cy="27" r="1" fill="white" opacity=".5"/><circle cx="32" cy="18" r="1.5" fill="white" opacity=".9"/><circle cx="46" cy="34" r="1" fill="white" opacity=".6"/><circle cx="16" cy="38" r="1" fill="white" opacity=".5"/><ellipse cx="28" cy="46" rx="20" ry="7" fill="#FD721E" opacity=".15"/></svg>` },
+  { id:'flowers',cap:'garden_sun.jpg',  svg:`<svg viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#F5FFF0"/><circle cx="20" cy="23" r="7" fill="#FD721E" opacity=".25"/><circle cx="20" cy="23" r="3.5" fill="#FF1803" opacity=".4"/><circle cx="38" cy="27" r="5.5" fill="#FD721E" opacity=".2"/><circle cx="38" cy="27" r="2.5" fill="#FF6B00" opacity=".35"/><circle cx="29" cy="17" r="4.5" fill="#FF9A1F" opacity=".28"/><circle cx="29" cy="17" r="2" fill="#FD721E" opacity=".45"/><line x1="20" y1="30" x2="20" y2="48" stroke="#5CAF3E" stroke-width="2" stroke-linecap="round" opacity=".5"/><line x1="38" y1="33" x2="36" y2="48" stroke="#5CAF3E" stroke-width="2" stroke-linecap="round" opacity=".5"/><line x1="29" y1="22" x2="27" y2="48" stroke="#5CAF3E" stroke-width="2" stroke-linecap="round" opacity=".5"/></svg>` },
+  { id:'mtn',    cap:'altitude.cr3',    svg:`<svg viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#F0F5FF"/><rect x="0" y="40" width="56" height="16" fill="#E0E8FF" opacity=".6"/><polygon points="6,40 24,12 42,40" fill="#FF9A1F" opacity=".22"/><polygon points="20,40 38,18 56,40" fill="#FD721E" opacity=".18"/><polygon points="0,40 16,20 32,40" fill="#FFB380" opacity=".2"/><ellipse cx="24" cy="12" rx="5" ry="3.5" fill="white" opacity=".7"/></svg>` },
+  { id:'party',  cap:'dec_memories.jpg',svg:`<svg viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#FFF8FF"/><circle cx="28" cy="28" r="4.5" fill="#FF1803" opacity=".35"/><line x1="28" y1="8" x2="28" y2="23" stroke="#FD721E" stroke-width="2" stroke-linecap="round" opacity=".4"/><line x1="12" y1="18" x2="23" y2="25" stroke="#FF9A1F" stroke-width="2" stroke-linecap="round" opacity=".35"/><line x1="44" y1="18" x2="33" y2="25" stroke="#C4B8F0" stroke-width="2" stroke-linecap="round" opacity=".4"/><line x1="12" y1="42" x2="23" y2="32" stroke="#FD721E" stroke-width="2" stroke-linecap="round" opacity=".3"/><line x1="44" y1="42" x2="33" y2="32" stroke="#FF1803" stroke-width="2" stroke-linecap="round" opacity=".3"/><circle cx="28" cy="8" r="2.5" fill="#FF9A1F" opacity=".6"/><circle cx="12" cy="18" r="2" fill="#FD721E" opacity=".55"/><circle cx="44" cy="18" r="2" fill="#C4B8F0" opacity=".7"/><circle cx="12" cy="42" r="2" fill="#FD721E" opacity=".45"/><circle cx="44" cy="42" r="2" fill="#FF9A1F" opacity=".5"/></svg>` },
+  { id:'wave',   cap:'beach_nostalg.tiff',svg:`<svg viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="#F0FAFF"/><ellipse cx="28" cy="48" rx="24" ry="5" fill="#B0D8F0" opacity=".4"/><path d="M2 36 Q12 27 21 34 Q30 41 39 32 Q48 23 56 30" stroke="#5BA8D4" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".5"/><path d="M0 44 Q9 37 18 42 Q27 47 36 40 Q45 33 56 38" stroke="#3A8BC0" stroke-width="2" fill="none" stroke-linecap="round" opacity=".38"/><circle cx="40" cy="14" r="9" fill="#FD721E" opacity=".18"/><circle cx="40" cy="14" r="5" fill="#FF9A1F" opacity=".28"/></svg>` },
 ];
 
-let gFlipped=[],gMatched=[],gMoves=0,gPairs=0,gLock=false,gTimerInt,gTimeLeft=60,gActive=false;
+const matchMsgs = {
+  sunset:'Perfect shot. The servers wish they had that warmth.',
+  rain:'Great match — very relatable energy right now.',
+  coffee:'Matched! Our engineers are on their 6th cup.',
+  stars:'Stars aligned. Unlike our uptime.',
+  flowers:'Blooming pair. Unlike our deploy pipeline.',
+  mtn:'High five — from high altitudes.',
+  party:'Party unlocked! The servers are celebrating (slowly).',
+  wave:"Surf's up. Servers, less so.",
+};
+const missMsgs = [
+  'Not quite — the memories are playing hard to get.',
+  'So close. But close only counts in horseshoes.',
+  'Nope! You looked confident though, and that counts.',
+  'Miss! Maybe buy them dinner first.',
+  'The photos disagree. Keep going.',
+  'Wrong match. Like us and uptime.',
+];
 
-function initGame(){
+let gFlipped = [], gMatched = [], gMoves = 0, gPairs = 0;
+let gLock = false, gTimerInt, gTimeLeft = 60, gActive = false;
+
+function initGame() {
   clearInterval(gTimerInt);
-  gFlipped=[];gMatched=[];gMoves=0;gPairs=0;gLock=false;gTimeLeft=60;gActive=false;
+  gFlipped = []; gMatched = []; gMoves = 0; gPairs = 0;
+  gLock = false; gTimeLeft = 60; gActive = false;
 
-  document.getElementById('g-timer').textContent='60';
-  document.getElementById('g-timer').className='g-stat-val';
-  document.getElementById('g-moves').textContent='0';
-  document.getElementById('g-pairs').innerHTML='0<span style="font-size:0.65rem;opacity:0.4">/8</span>';
-  document.getElementById('g-prog').style.width='0%';
-  document.getElementById('g-prog-label').textContent='flip a tile to start the clock';
-  document.getElementById('g-prog-pct').textContent='0 / 8';
-  document.getElementById('game-toast').textContent='tap any tile to begin — find all 8 matching pairs';
-  document.getElementById('game-toast').className='game-toast';
-  document.getElementById('game-result').className='game-result';
-  document.getElementById('game-grid').style.display='grid';
-  document.getElementById('game-toast').style.display='block';
+  document.getElementById('g-timer').textContent = '60';
+  document.getElementById('g-timer').className = 'g-stat-val';
+  document.getElementById('g-moves').textContent = '0';
+  document.getElementById('g-pairs').innerHTML = '0<span style="font-size:.52rem;opacity:.38">/8</span>';
+  document.getElementById('g-prog').style.width = '0%';
+  document.getElementById('g-prog-label').textContent = 'flip a tile to start the clock';
+  document.getElementById('g-prog-pct').textContent = '0 / 8';
+  document.getElementById('game-toast').textContent = 'tap any tile to begin — find all 8 matching pairs';
+  document.getElementById('game-toast').className = 'game-toast';
+  document.getElementById('game-result').className = 'game-result';
+  document.getElementById('game-grid').style.display = 'grid';
+  document.getElementById('game-toast').style.display = 'block';
 
-  const deck=[...GAME_CARDS,...GAME_CARDS].sort(()=>Math.random()-0.5);
-  const grid=document.getElementById('game-grid');
-  grid.innerHTML='';
-  deck.forEach((c,i)=>{
-    const tile=document.createElement('div');
-    tile.className='tile';
-    tile.dataset.id=c.id;
-    tile.innerHTML=`<div class="tile-inner">
+  const deck = [...CARDS, ...CARDS].sort(() => Math.random() - 0.5);
+  const grid = document.getElementById('game-grid');
+  grid.innerHTML = '';
+
+  deck.forEach(c => {
+    const tile = document.createElement('div');
+    tile.className = 'tile';
+    tile.dataset.id = c.id;
+    tile.innerHTML = `<div class="tile-inner">
       <div class="tile-back">
-        <svg viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="10" stroke="#FD721E" stroke-width="1" opacity=".45"/><circle cx="13" cy="13" r="5.5" fill="#FD721E" opacity=".15"/><circle cx="13" cy="13" r="2.5" fill="#FF1803" opacity=".32"/></svg>
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FD721E" stroke-width="1" opacity=".4"/><circle cx="12" cy="12" r="5" fill="#FD721E" opacity=".14"/><circle cx="12" cy="12" r="2.2" fill="#FF1803" opacity=".3"/></svg>
         <span>tap</span>
       </div>
       <div class="tile-front">
@@ -983,103 +841,98 @@ function initGame(){
         <div class="ti-cap">${c.cap}</div>
       </div>
     </div>`;
-    tile.addEventListener('click',()=>onTileClick(tile,c.id));
+    tile.addEventListener('click', () => onTileClick(tile, c.id));
+    tile.addEventListener('mouseenter', makeCursorBig);
+    tile.addEventListener('mouseleave', makeCursorSmall);
     grid.appendChild(tile);
-    // refresh cursor listeners for new tiles
-    tile.addEventListener('mouseenter',()=>{cursor.style.width='20px';cursor.style.height='20px';ring.style.width='50px';ring.style.height='50px';ring.style.borderColor='var(--rd)';});
-    tile.addEventListener('mouseleave',()=>{cursor.style.width='12px';cursor.style.height='12px';ring.style.width='36px';ring.style.height='36px';ring.style.borderColor='var(--or)';});
   });
 }
 
-function startGameTimer(){
-  if(gActive)return;
-  gActive=true;
-  document.getElementById('g-prog-label').textContent='clock is ticking\u2026';
-  gTimerInt=setInterval(()=>{
+function startTimer() {
+  if (gActive) return;
+  gActive = true;
+  document.getElementById('g-prog-label').textContent = 'clock is ticking…';
+  gTimerInt = setInterval(() => {
     gTimeLeft--;
-    const tv=document.getElementById('g-timer');
-    tv.textContent=gTimeLeft;
-    if(gTimeLeft<=15)tv.className='g-stat-val timer-danger';
-    if(gTimeLeft<=0){clearInterval(gTimerInt);endGame(false);}
-  },1000);
+    const tv = document.getElementById('g-timer');
+    tv.textContent = gTimeLeft;
+    if (gTimeLeft <= 15) tv.className = 'g-stat-val danger';
+    if (gTimeLeft <= 0) { clearInterval(gTimerInt); endGame(false); }
+  }, 1000);
 }
 
-function onTileClick(tile,id){
-  if(gLock||tile.classList.contains('flipped')||tile.classList.contains('matched'))return;
-  startGameTimer();
+function onTileClick(tile, id) {
+  if (gLock || tile.classList.contains('flipped') || tile.classList.contains('matched')) return;
+  startTimer();
   tile.classList.add('flipped');
   gFlipped.push(tile);
-  if(gFlipped.length===2){
-    gLock=true;gMoves++;
-    document.getElementById('g-moves').textContent=gMoves;
-    const [a,b]=gFlipped;
-    if(a.dataset.id===b.dataset.id){
-      setTimeout(()=>{
-        a.classList.add('matched');b.classList.add('matched');
-        a.classList.remove('flipped');b.classList.remove('flipped');
+
+  if (gFlipped.length === 2) {
+    gLock = true; gMoves++;
+    document.getElementById('g-moves').textContent = gMoves;
+    const [a, b] = gFlipped;
+
+    if (a.dataset.id === b.dataset.id) {
+      setTimeout(() => {
+        a.classList.add('matched'); b.classList.add('matched');
+        a.classList.remove('flipped'); b.classList.remove('flipped');
         gPairs++;
-        document.getElementById('g-pairs').innerHTML=gPairs+'<span style="font-size:0.65rem;opacity:0.4">/8</span>';
-        const pct=(gPairs/8*100).toFixed(0);
-        document.getElementById('g-prog').style.width=pct+'%';
-        document.getElementById('g-prog-pct').textContent=gPairs+' / 8';
-        setGameToast(getMatchMsg(a.dataset.id),'match');
+        document.getElementById('g-pairs').innerHTML = gPairs + '<span style="font-size:.52rem;opacity:.38">/8</span>';
+        const pct = (gPairs / 8 * 100).toFixed(0);
+        document.getElementById('g-prog').style.width = pct + '%';
+        document.getElementById('g-prog-pct').textContent = gPairs + ' / 8';
+        setGameToast(matchMsgs[a.dataset.id] || 'Nice match!', 'match');
         triggerFlash();
-        gFlipped=[];gLock=false;
-        if(gPairs===8)endGame(true);
-      },380);
+        gFlipped = []; gLock = false;
+        if (gPairs === 8) endGame(true);
+      }, 380);
     } else {
-      setGameToast(getMissMsg(),'wrong');
-      setTimeout(()=>{
-        a.classList.add('wrong');b.classList.add('wrong');
-        setTimeout(()=>{a.classList.remove('flipped','wrong');b.classList.remove('flipped','wrong');gFlipped=[];gLock=false;},400);
-      },550);
+      setGameToast(missMsgs[Math.floor(Math.random() * missMsgs.length)], 'wrong');
+      setTimeout(() => {
+        a.classList.add('wrong'); b.classList.add('wrong');
+        setTimeout(() => {
+          a.classList.remove('flipped', 'wrong');
+          b.classList.remove('flipped', 'wrong');
+          gFlipped = []; gLock = false;
+        }, 400);
+      }, 550);
     }
   }
 }
 
-const matchMsgs={sunset:'Perfect shot. The servers wish they had that warmth.',rain:'Great match — very relatable energy right now.',coffee:'Matched! Our engineers are on their 6th cup.',stars:'Stars aligned. Unlike our uptime.',flowers:'Blooming pair. Unlike our deploy pipeline.',mountains:'High five — from high altitudes.',party:'Party unlocked! The servers are celebrating (slowly).',wave:"Surf's up. Servers, less so."};
-function getMatchMsg(id){return matchMsgs[id]||'Nice match!';}
-const missMsgs=['Not quite — the memories are playing hard to get.','So close. But close only counts in horseshoes.','Nope! But you looked confident, and that counts.','Miss! Maybe buy them dinner first.','The photos disagree. Keep going.'];
-function getMissMsg(){return missMsgs[Math.floor(Math.random()*missMsgs.length)];}
-
-function setGameToast(msg,type){
-  const t=document.getElementById('game-toast');
-  t.textContent=msg;t.className='game-toast '+type;
+function setGameToast(msg, type) {
+  const t = document.getElementById('game-toast');
+  t.textContent = msg; t.className = 'game-toast ' + type;
 }
 
-function endGame(won){
-  clearInterval(gTimerInt);gActive=false;
-  setTimeout(()=>{
-    const grid=document.getElementById('game-grid');
-    const toast=document.getElementById('game-toast');
-    const result=document.getElementById('game-result');
-    grid.style.display='none';
-    toast.style.display='none';
-    result.className='game-result show';
+function endGame(won) {
+  clearInterval(gTimerInt); gActive = false;
+  setTimeout(() => {
+    document.getElementById('game-grid').style.display = 'none';
+    document.getElementById('game-toast').style.display = 'none';
+    document.getElementById('game-result').className = 'game-result show';
 
-    const score=won?Math.max(100,1000-gMoves*30+gTimeLeft*15):Math.round(gPairs*60);
-    document.getElementById('rs-moves').textContent=gMoves;
-    document.getElementById('rs-time').textContent=gTimeLeft+'s';
-    document.getElementById('rs-score').textContent=score;
+    const score = won ? Math.max(100, 1000 - gMoves * 30 + gTimeLeft * 15) : Math.round(gPairs * 60);
+    document.getElementById('rs-moves').textContent = gMoves;
+    document.getElementById('rs-time').textContent = gTimeLeft + 's';
+    document.getElementById('rs-score').textContent = score;
 
-    const badge=document.getElementById('result-badge');
-    const title=document.getElementById('result-title');
-    const sub=document.getElementById('result-sub');
-
-    if(won){
-      badge.className='result-badge win';
-      badge.innerHTML=`<svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M8 15l5 5 9-9" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-      title.innerHTML='Memory <span class="accent">Unlocked</span>';
-      sub.textContent=gMoves<=12?'Flawless recall. Hire this person immediately.':gMoves<=18?'Sharp instincts. Your photos are in good hands.':'All 8 pairs found! The servers are taking notes.';
+    if (won) {
+      document.getElementById('result-badge').className = 'result-badge win';
+      document.getElementById('result-badge').innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-9" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      document.getElementById('result-title').innerHTML = 'Memory <span class="accent">Unlocked</span>';
+      document.getElementById('result-sub').textContent =
+        gMoves <= 12 ? 'Flawless recall. Hire this person immediately.' :
+        gMoves <= 18 ? 'Sharp instincts. Your photos are in good hands.' :
+        'All 8 pairs found! The servers are taking notes.';
+      showToast('🎉 All pairs found! You crushed it.');
     } else {
-      badge.className='result-badge lose';
-      badge.innerHTML=`<svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M10 10l10 10M20 10l-10 10" stroke="#FF1803" stroke-width="2" stroke-linecap="round"/></svg>`;
-      title.innerHTML='Time\'s <span class="accent">Up</span>';
-      sub.textContent=gPairs+' of 8 pairs found. Even our servers outlast— wait, never mind.';
+      document.getElementById('result-badge').className = 'result-badge lose';
+      document.getElementById('result-badge').innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 7l10 10M17 7l-10 10" stroke="#FF1803" stroke-width="2" stroke-linecap="round"/></svg>`;
+      document.getElementById('result-title').innerHTML = 'Time\'s <span class="accent">Up</span>';
+      document.getElementById('result-sub').textContent = gPairs + ' of 8 pairs found. Even our servers outlast— wait, never mind.';
     }
-
-    if(won) showToast('🎉 All pairs found! You crushed it.');
-  },500);
+  }, 500);
 }
 
 // Start game on load
